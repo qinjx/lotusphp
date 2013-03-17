@@ -1,0 +1,75 @@
+body { padding:0px; margin:0px; font-size:12px;text-align:center; }
+h1, h2, h3, h4, h5, h6, form, div, p, i, img, ul, li, ol, table, tr, td, fieldset, label, legend { margin:0px; padding:0px; }
+img { border:none; }
+a:link { color:#07519A; text-decoration:none; }
+a:visited { color:#07519A; text-decoration:none; }
+a:active, a:hover { text-decoration:underline; }
+ul, li { padding:0px; margin:0px; list-style:none; }
+table { border-collapse: collapse; }
+.clearit { clear:both; height:0px; overflow:hidden; }
+.left { float:left; }
+.right { float: right; }
+.rowbg0 { background:#F0F0F0; }
+.rowbg1 { background:#F0F8FF; }
+.rowbg2 { background:#F1F5F8; }
+/*布局*/
+.area { margin:0 auto; padding:0; width:950px;text-align:left; }
+/*页头页脚*/
+#top { text-indent:24px; height:24px; line-height:24px; font-size:12px; background:#F3F9FF; border-bottom:2px solid #D9E6F0;color:#202020;text-align:left; }
+#top .infol { float:left; margin-left:24px;display:inline;}
+#top .infor { float:right; margin-right:24px;display:inline;}
+#top .infor a{ padding:2px 8px;background:#FFF;border:1px solid #5EBBDA; }
+#sitenav { margin:0 auto; border-bottom:1px solid #ccc; width:950px; line-height:24px;height:24px;text-align:left; }
+#sitenav span { float:right; }
+#header { margin:0 auto; padding:0; width:950px; height:60px; }
+#header h1 { float:left; line-height:60px; }
+#header h2 { float:right; line-height:60px; }
+#footer { margin:12px auto; width:950px; line-height:24px; border-top:1px solid #D8D9D9; clear:both; text-align:center; }
+/*导航*/
+.nav { clear:both; background:#F8F8F8; font-size:14px; }
+.nav ul { list-style:none; width:100%; height:24px; }
+.nav ul li { float:left; line-height:24px; }
+.nav ul li a { padding:0 12px; display:block;float:left; }
+
+.button_box { clear:both; text-align:center; padding:5px; }
+.btn { padding:2px 6px; color:#202020; background:#F3F9FF; border:1px solid #D9E6F0; height:24px; line-height:24px; }
+
+/*列表表格*/
+.divbox { margin-bottom:6px;}
+.divtitle { color:#000; background:#F1F5F8; padding:8px; border: solid; border-color: #D8DDE5 #D8DDE5 #D8DDE5; border-width: 1px 1px 0px; font-weight:bolder; }
+
+.listtable { margin-bottom:6px; width: 100%; border-collapse: collapse; border: solid; border-color: #86B9D6 #D8DDE5 #D8DDE5; border-width: 1px 1px 1px; font-size:12px; }
+.listtable caption { color:#000; background:#F1F5F8; padding:8px; border: solid; border-color: #D8DDE5 #D8DDE5 #D8DDE5; border-width: 1px 1px 0px; font-weight:bolder; }
+.listtable th { background: #F3F7FF; color: #6774A8; border-bottom: 1px solid #86B9D6; padding: 6px; }
+.listtable td { border: 1px solid #D8DDE5; padding: 6px;  }
+.darkrow2 { color: #808080; text-decoration: line-through; }
+.darkrow td { background: #FAFCFF; }
+.over td { background:#FAFAFA; }
+.rowblocked td { background: #F1F1F1; color: #666; }
+.rowblocked a { color: #666; }
+.listtable p.cate { margin: 0; }
+.listtable p.cate, .listtable p.cate a { color: #003195; }
+.listtable .dateline { float: right; }
+.listtable .relativetags { margin: 0.1em; }
+/* 分页 */
+.pages { margin: 5px auto; padding: 0; text-align: right; }
+.pages * { vertical-align: middle; }
+.pages a { margin:0 1px; padding:1px 4px; color: #002F79; background:#f9fcff; border:1px solid #A1C4CD; text-align: center; text-decoration: none; font:normal 12px/14px verdana; }
+.pages a:hover { border:#37A717 1px solid; color: #002F79; background:#EDFFE4; text-decoration:none; font-weight: bold; }
+.pages input { margin:0 1px; padding:1px 4px; border:1px solid #87C932; color:#499000; font:bold 12px/15px Verdana; }
+.pages b { padding:2px; margin: 0 3px; font:bold 10px/12px Tahoma; }
+.pages span { margin:0 1px; padding:1px 4px; color: #154BA0; background-color: #F5FBFF; border: 1px solid #86B9D6; font-weight: bold; }
+/* 登陆 */
+#loginbox { margin:24px auto;padding:10px;width:320px;border:1px solid #8BB2D9;background:#F2F7FF;}
+#loginbox form { background:#FFFFFF;border:1px solid #E3EFFC; }
+#loginbox table { margin:0 auto; padding:0;width:90%; }
+#loginbox h3 { height:28px; line-height:28px; font-size:14px;border:2px solid #FFFFFF;background:#F2F7FF;text-indent:20px; }
+#loginbox table td { font-size:14px; line-height:40px; height:40px; padding:4px 8px; }
+#loginbox input { padding:4px;font-size: 14px; }
+#username, #password, #checkcode { width:160px;border:1px solid #85A0BE;font-size:14px;font-weight:bolder; }
+#login { background:#F2F7FF;border:none;color:#000; }
+/* messagebox */
+.messagebox { width:500px;margin:24px auto;padding:12px;text-align:left;border:1px solid #8BB2D9;background:#F2F7FF; }
+.messagebox h3{ height:28px; line-height:28px; font-size:14px;border:2px solid #FFFFFF;background:#F2F7FF;text-indent:12px; }
+.messagebox p, .messagebox pre { margin:12px;padding:0;font-size:14px;color:#666666; }
+.infobox { background:#FFFFFF;border:1px solid #E3EFFC; }

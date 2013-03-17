@@ -1,0 +1,5 @@
+使用:
+用web方式访问disable_require_in_zf.php
+其中:
+source_path:zendframework所在的目录,要为绝对路径
+destination_path:过滤掉require_once后文件保存的目录,要绝对路径

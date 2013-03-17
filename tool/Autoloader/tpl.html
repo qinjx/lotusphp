@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>LotusConvertor</title>
+</head>
+<body>
+<form action="" method="post">
+原始类库位置的绝对路径:<input type="text" size="64" name="source_path" /><br/><br/>
+转换后文件保存位置的绝对路径:<input type="text" size="64" name="destination_path" value="" /><br/><br/>
+类库的类型:
+<?php if(isset($this->supportTypes)){
+	echo "<select name=\"type\" >";
+ 	foreach($this->supportTypes as $type) { 
+		echo "<option value=\"$type\">$type</option>" ;
+	}
+	echo "</select>";
+}
+?>
+
+<input type="submit" value="确认提交" /><br/>
+</form>
+信息:共找到<?php echo isset($fileList)?count($fileList):0; ?>个文件,其中<?php echo $this->fileCount; ?>个被成功转换,保存在<?php echo $this->destinationPath ?>目录中<br />
+<?php if(!empty($this->msg)){
+	foreach($this->msg as $msg){
+		echo "$msg"."<br/>";
+	}
+}
+?>
+</body>
+</html>
