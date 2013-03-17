@@ -28,7 +28,6 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	public function testMostUsedWayLtStoreFile()
 	{
 		$storeHandle = new LtStoreFile;
-		$storeHandle->useSerialize = true;
 
 		$this->assertTrue($storeHandle->add("test_key", "test_value"));
 		$this->assertEquals("test_value", $storeHandle->get("test_key"));
@@ -61,7 +60,6 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 			);
 
 		$sh = new LtStoreFile;
-		$sh->useSerialize = true;
 
 		foreach ($data as $set)
 		{

@@ -35,7 +35,6 @@ class PerformanceTuningAutoloader extends PHPUnit_Framework_TestCase
 		$cacheHandle = new LtStoreFile;
 		$prefix = sprintf("%u", crc32(serialize($autoloadPath)));
 		$cacheHandle->prefix = 'Lotus-' . $prefix;
-		$cacheHandle->useSerialize = true;
 		$cacheHandle->init(); 
 		/**
 		 * 运行autoloader成功加载一个类

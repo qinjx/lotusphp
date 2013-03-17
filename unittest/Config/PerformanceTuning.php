@@ -26,7 +26,6 @@ class PerformanceTuningConfig extends PHPUnit_Framework_TestCase
 		 * 用LtStoreFile作存储层提升性能
 		 */
 		$cacheHandle = new LtStoreFile;
-		$cacheHandle->useSerialize = true;
 		$cacheHandle->init(); 
 		// 准备confif_file
 		$config_file = dirname(__FILE__) . "/test_data/conf.php";

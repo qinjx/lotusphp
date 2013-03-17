@@ -98,7 +98,6 @@ class LtAutoloader
                 {
                     $this->storeHandle = new LtStoreFile;
                     $this->storeHandle->prefix = 'Lt-Autoloader-' . $this->storeNameSpaceId;
-                    $this->storeHandle->useSerialize = true;
                     $this->storeHandle->init();
                 }
                 else
@@ -142,7 +141,6 @@ class LtAutoloader
     {
         $this->persistentStoreHandle = new LtStoreFile;
         $this->persistentStoreHandle->prefix = 'Lt-parsed-token-' . $this->storeNameSpaceId;
-        $this->persistentStoreHandle->useSerialize = true;
     }
 
 	/**

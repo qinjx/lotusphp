@@ -18,17 +18,15 @@ class LtStoreFile implements LtStore
 	 * 存储路径
 	 * @var string
 	 */
+
 	public $storeDir;
 	/**
 	 * 前缀
 	 * @var string
 	 */
+
 	public $prefix = 'LtStore';
-	/**
-	 * 是否使用序列化
-	 * @var boolean
-	 */
-	public $useSerialize = false;
+
 	/**
 	 * 默认存储路径
 	 * @var string
@@ -71,11 +69,7 @@ class LtStoreFile implements LtStore
 		{
 			return false;
 		}
-		if ($this->useSerialize)
-		{
-			$value = serialize($value);
-		}
-		$length = file_put_contents($file, '<?php exit;?>' . $value);
+		$length = file_put_contents($file, '<?php exit;?>' . serialize($value));
 		return $length > 0 ? true : false;
 	}
 
@@ -112,11 +106,7 @@ class LtStoreFile implements LtStore
 			return false;
 		}
 		$str = file_get_contents($file);
-		$value = substr($str, 13);
-		if ($this->useSerialize)
-		{
-			$value = unserialize($value);
-		}
+		$value = unserialize(substr($str, 13));
 		return $value;
 	}
 
@@ -136,11 +126,7 @@ class LtStoreFile implements LtStore
 		}
 		else
 		{
-			if ($this->useSerialize)
-			{
-				$value = serialize($value);
-			}
-			$length = file_put_contents($file, '<?php exit;?>' . $value);
+			$length = file_put_contents($file, '<?php exit;?>' . serialize($value));
 			return $length > 0 ? true : false;
 		}
 	}

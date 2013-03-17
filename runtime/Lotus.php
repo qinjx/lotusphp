@@ -108,7 +108,6 @@ class Lotus
 		$this->coreCacheHandle = new LtStoreFile;
 		$prefix = sprintf("%u", crc32(serialize($this->app_dir)));
 		$this->coreCacheHandle->prefix = 'Lotus-' . $prefix;
-		$this->coreCacheHandle->useSerialize = true;
 		$this->coreCacheHandle->storeDir = $this->cache_dir;
 		$this->coreCacheHandle->init();
 
