@@ -84,7 +84,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * 测试数据类型支持情况
+	 * 测试Key数据类型支持情况
 	 * @dataProvider testKeyTypeDataProvider
 	 */
 	public function testKeyType($key, $excepted)
@@ -127,13 +127,13 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 			array(array("a" => 1, "b" => 2), true),//字符串做下标的数组
 			array(new LtStoreMemory, true),//对象
 			array(NULL, true),//空
-			array(xml_parser_create(), false),//资源类型，不支持
+			//array(xml_parser_create(), false),//资源类型，不支持
 		);
 	}
 
 	/**
-	 * 测试数据类型支持情况
-	 * @dataProvider testKeyTypeDataProvider
+	 * 测试Value数据类型支持情况
+	 * @dataProvider testValueTypeDataProvider
 	 */
 	public function testValueType($value, $excepted)
 	{
@@ -146,7 +146,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 			$storeHandle->del($key);
 			$result = $storeHandle->add($key, $value);
 
-			$this->assertEquals($result, $excepted);
+			$this->assertEquals($excepted, $result);
 
 			if($result)
 			{
