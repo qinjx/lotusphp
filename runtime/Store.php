@@ -15,22 +15,30 @@
  */
 Interface LtStore
 {
+    /**
+     * init method
+     */
+    public function init();
+
 	/**
 	 * add
 	 * @param string $key
 	 * @param string|array $value
 	 */
 	public function add($key, $value);
+
 	/**
 	 * del
 	 * @param string $key
 	 */
 	public function del($key);
+
 	/**
 	 * get
 	 * @param string $key
 	 */
 	public function get($key);
+
 	/**
 	 * update
 	 * @param string $key

@@ -20,13 +20,14 @@ class LtStoreMemory implements LtStore
 	 */
 	protected $stack;
 
-    /*
+    /**
      * init method
      */
     public function init()
     {
         //do nothing
     }
+
 	/**
 	 * add
 	 * @param string $key
