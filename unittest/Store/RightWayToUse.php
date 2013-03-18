@@ -64,7 +64,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 
     /**
      * 本用例展示了LtStore支持哪些Key类型
-     * LtStore支持的Key类型与PHP的数组下标类型一样，
+     * LtStore支持的Key类型与PHP的数组下标类型一样:
      *   key 可以是 integer 或者 string。如果key是一个 integer 的标准表示，则被解释为整数（例如 "8" 将被解释为 8，而 "08" 将被解释为 "08"）。key 中的浮点数被取整为 integer。
      * 来源：http://www.php.net/manual/zh/language.types.array.php
      *
@@ -76,11 +76,16 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
         return array(
             array(1024, true),//整数
             array(3.14, true),//浮点数
+            array(007, true),//字符串，由数字组成
+            array("1.414", true),//字符串
+            array("test_string", true),//字符串，由字母组成
+            array("string with white space", true),//带空格的字符串
         );
     }
 
 	/**
 	 * 测试数据类型支持情况
+     * @dataProvider testKeyTypeDataProvider
 	 */
 	public function testKeyType($key, $excepted)
 	{
@@ -88,6 +93,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
         {
             $storeHandle = new $storeClass;
             $storeHandle->init();
+            $storeHandle->del($key);
 
             $value = uniqid();
             $result = $storeHandle->add($key, $value);
@@ -99,16 +105,55 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
                 $this->assertEquals($storeHandle->get($key), $value);
             }
         }
-		$data = array(
-			// $key => value
-			array(1, 2),
-			array(1.1, null),
-			array(-1, ""),
-			array("string", "test_value_string"),
-			array("array", array(1, 2, 4)),
-			array("object", new LtStoreFile)
-			);
 	}
+
+    /**
+     * 本用例展示了LtStore支持哪些Value类型
+     * LtStore支持的Value类型与PHP的serialize()一样:
+     *   serialize 可以resource 之外的任何类型。
+     * 来源：http://www.php.net/manual/zh/serialize
+     *
+     * 添加新的测试条请增加一行
+     * array("Value示例", 是否支持)
+     */
+    public function testValueTypeDataProvider()
+    {
+        return array(
+            array(TRUE, true),//布尔型
+            array(1024, true),//整数
+            array(3.14, true),//浮点数
+            array("test_string", true),//字符串
+            array(array(1,2,3), true),//数组
+            array(array("a" => 1, "b" => 2), true),//字符串做下标的数组
+            array(new LtStoreMemory, true),//对象
+            array(NULL, true),//空
+            array(xml_parser_create(), false),//资源类型，不支持
+        );
+    }
+
+    /**
+     * 测试数据类型支持情况
+     * @dataProvider testKeyTypeDataProvider
+     */
+    public function testValueType($value, $excepted)
+    {
+        foreach(array("LtStoreMemory", "LtStoreFile") as $storeClass)
+        {
+            $storeHandle = new $storeClass;
+            $storeHandle->init();
+
+            $key = uniqid();
+            $storeHandle->del($key);
+            $result = $storeHandle->add($key, $value);
+
+            $this->assertEquals($result, $excepted);
+
+            if($result)
+            {
+                $this->assertEquals($storeHandle->get($key), $value);
+            }
+        }
+    }
 
 	protected function setUp()
 	{
