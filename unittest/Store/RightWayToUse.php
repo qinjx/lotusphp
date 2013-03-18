@@ -98,7 +98,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 			$value = uniqid();
 			$result = $storeHandle->add($key, $value);
 
-			$this->assertEquals($result, $excepted);
+			$this->assertEquals($excepted, $result);
 
 			if($result)
 			{
