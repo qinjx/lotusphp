@@ -46,6 +46,7 @@ class RightWayToUseAutoloader extends PHPUnit_Framework_TestCase
 		 */
 		// 1. 实例化
 		$autoloader = new LtAutoloader;
+
 		// 2. 设置属性
 		$autoloader->autoloadPath = array(
 			dirname(__FILE__) . "/test_data/class_dir_1",
@@ -53,6 +54,7 @@ class RightWayToUseAutoloader extends PHPUnit_Framework_TestCase
 			dirname(__FILE__) . "/test_data/function_dir_1",
 			dirname(__FILE__) . "/test_data/function_dir_2"
 		);
+
 		// 3. 调init()方法
 		$autoloader->init();
 
