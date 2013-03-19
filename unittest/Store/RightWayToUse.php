@@ -56,7 +56,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 		$this->assertFalse($storeHandle->del("some_key_not_exists"));
 		$this->assertFalse($storeHandle->update("some_key_not_exists", "any value")); 
 
-		//添加重复的key
+		//添加重复的key，失败，返回false
 		$this->assertTrue($storeHandle->add("key1", "value1"));
 		$this->assertFalse($storeHandle->add("key1", "value1"));
 		$storeHandle->del("key1");
@@ -66,7 +66,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	 * 本用例展示了LtStore支持哪些Key类型
 	 * LtStore支持的Key类型与PHP的数组下标类型一样:
 	 *   key 可以是 integer 或者 string。如果key是一个 integer 的标准表示，则被解释为整数（例如 "8" 将被解释为 8，而 "08" 将被解释为 "08"）。key 中的浮点数被取整为 integer。
-	 * 来源：http://www.php.net/manual/zh/language.types.array.php
+	 * 来源：http://www.php.net/manual/en/language.types.array.php（这篇文档对应的中文版有错，截止2013-3-19没有更正）
 	 *
 	 * 添加新的测试条请增加一行
 	 * array("Key示例", 是否支持)
@@ -89,9 +89,19 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	 */
 	public function testKeyType($key, $excepted)
 	{
-		foreach(array("LtStoreMemory", "LtStoreFile") as $storeClass)
-		{
-			$storeHandle = new $storeClass;
+        for($i=0; ; $i++)
+        {
+            switch($i % 10)
+            {
+                case "0":
+                    $storeHandle = new LtStoreMemory;
+                    break;
+                case "1":
+                    $storeHandle = new LtStoreFile;
+                    break;
+                default:
+                    break 2;
+            }
 			$storeHandle->init();
 			$storeHandle->del($key);
 
@@ -110,8 +120,10 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	/**
 	 * 本用例展示了LtStore支持哪些Value类型
 	 * LtStore支持的Value类型与PHP的serialize()一样:
-	 *   serialize 可以resource 之外的任何类型。
-	 * 来源：http://www.php.net/manual/zh/serialize
+	 *   serialize() 可以序列化除了 resource 之外的任何类型。(原文：serialize() handles all types, except the resource-type.）
+	 * 来源：http://www.php.net/manual/en/function.serialize.php
+     *
+     * 虽然LtStoreMemory可以支持任何数据类型（包括resource和任何的object），因为它不需要将这些数据类型转成字符串再持久化，但为了保持跟LtStoreFile的一致性，还是以LtStoreFile的限制为准。
 	 *
 	 * 添加新的测试条请增加一行
 	 * array("Value示例", 是否支持)
@@ -137,9 +149,19 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 	 */
 	public function testValueType($value, $excepted)
 	{
-		foreach(array("LtStoreMemory", "LtStoreFile") as $storeClass)
+        for($i=0; ; $i++)
 		{
-			$storeHandle = new $storeClass;
+            switch($i % 10)
+            {
+                case "0":
+                    $storeHandle = new LtStoreMemory;
+                    break;
+                case "1":
+                    $storeHandle = new LtStoreFile;
+                    break;
+                default:
+                    break 2;
+            }
 			$storeHandle->init();
 
 			$key = uniqid();
@@ -154,6 +176,10 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 			}
 		}
 	}
+    public function testTemp()
+    {
+
+    }
 
 	protected function setUp()
 	{
