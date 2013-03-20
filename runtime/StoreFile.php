@@ -46,7 +46,7 @@ class LtStoreFile implements LtStore
 		{
 			$this->storeDir = self::$defaultStoreDir;
 		}
-        else if (isset($_SERVER["DOC_ROOT"]) && strpos($this->storeDir, $_SERVER["DOC_ROOT"]))
+        else if (isset($_SERVER["DOCUMENT_ROOT"]) && false !== strpos($this->storeDir, $_SERVER["DOCUMENT_ROOT"]))
         {
             trigger_error("don't put store dir under doc_root");
         }
