@@ -18,13 +18,12 @@ class LtStoreFile implements LtStore
 	 * 存储路径
 	 * @var string
 	 */
-
 	public $storeDir;
+
 	/**
 	 * 前缀
 	 * @var string
 	 */
-
 	public $prefix = 'LtStore';
 
 	/**
@@ -32,8 +31,13 @@ class LtStoreFile implements LtStore
 	 * @var string
 	 */
 	static public $defaultStoreDir = "/tmp/LtStoreFile/";
-	
-	/**
+
+    /**
+     * 是否初始化过
+     */
+    private $hasBeenInited = false;
+
+    /**
 	 * init
 	 */
 	public function init()
@@ -42,20 +46,25 @@ class LtStoreFile implements LtStore
 		{
 			$this->storeDir = self::$defaultStoreDir;
 		}
+        else if (isset($_SERVER["DOC_ROOT"]) && strpos($this->storeDir, $_SERVER["DOC_ROOT"]))
+        {
+            trigger_error("don't put store dir under doc_root");
+        }
 		$this->storeDir = str_replace('\\', '/', $this->storeDir);
 		$this->storeDir = rtrim($this->storeDir, '\\/') . '/';
+        $this->hasBeenInited = true;
 	}
 
 	/**
-	 * 当key存在时:
-	 * 如果没有过期, 不更新值, 返回 false
-	 * 如果已经过期,   更新值, 返回 true
+	 * 当key存在时, 返回 false
 	 * @param string $key
 	 * @param mixed $value
 	 * @return boolean
 	 */
 	public function add($key, $value)
 	{
+        if ($this->hasBeenInited)
+        {
 		$file = $this->getFilePath($key);
 		$cachePath = pathinfo($file, PATHINFO_DIRNAME);
 		if (!is_dir($cachePath))
@@ -69,8 +78,14 @@ class LtStoreFile implements LtStore
 		{
 			return false;
 		}
-		$length = file_put_contents($file, '<?php exit;?>' . serialize($value));
+		$length = file_put_contents($file, serialize($value));
 		return $length > 0 ? true : false;
+        }
+        else
+        {
+            trigger_error("init() method must be called");
+            return false;
+        }
 	}
 
 	/**
@@ -87,7 +102,7 @@ class LtStoreFile implements LtStore
 		}
 		else
 		{
-			return @unlink($file);
+			return unlink($file);
 		}
 	}
 
@@ -106,7 +121,7 @@ class LtStoreFile implements LtStore
 			return false;
 		}
 		$str = file_get_contents($file);
-		$value = unserialize(substr($str, 13));
+		$value = unserialize($str);
 		return $value;
 	}
 
@@ -126,7 +141,7 @@ class LtStoreFile implements LtStore
 		}
 		else
 		{
-			$length = file_put_contents($file, '<?php exit;?>' . serialize($value));
+			$length = file_put_contents($file, serialize($value));
 			return $length > 0 ? true : false;
 		}
 	}
@@ -143,6 +158,6 @@ class LtStoreFile implements LtStore
 		$this->prefix . '/' .
 		substr($token, 0, 2) .'/' .
 		substr($token, 2, 2) . '/' .
-		$token . '.php';
+		$token;
 	}
 }
