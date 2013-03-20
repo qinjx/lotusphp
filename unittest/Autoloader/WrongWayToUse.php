@@ -48,7 +48,7 @@ class WrongWayToUseAutoloader extends PHPUnit_Framework_TestCase
 	 * 
 	 * @expectedException PHPUnit_Framework_Error
 	 */
-	public function testDumplicateNameOfClasses()
+	public function testDuplicateNameOfClasses()
 	{
 		$ap = new LtAutoloaderProxy;
 		$ap->addClass("ClassA", __FILE__);
