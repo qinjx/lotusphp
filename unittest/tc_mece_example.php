@@ -18,6 +18,7 @@ class NumUtil
         {
             return false;
         }
+
 		/*
 		 * 先遍历数组找出零、负数、正数的数量
 		 * 只做统计，不排序，不做乘法
@@ -62,7 +63,11 @@ class NumUtil
 				}
 			}
 		}
-		if (1 < $amount_zero)
+
+        /**
+         * Logical control start
+         */
+        if (1 < $amount_zero)
 		{
 			/*
 			 * 0的个数大于1，任意取N-1个元素，其乘积都是0
@@ -85,10 +90,10 @@ class NumUtil
 				$pick_out_index = $the_only_zero_index;
 			}
 		}
-		else if (0 == $amount_zero)
+		else// if (1 > $amount_zero)
 		{
-			if (1 == $amount_negative % 2)
-			{//奇数个负数
+			if (1 == $amount_negative % 2)//奇数个负数
+			{
 				/*
 				 * 除【绝对值最小的负数】之外的N-1个整数乘积最大
 				 */
@@ -194,7 +199,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
 	{
-		$this->assertEquals(200, NumUtil::findMaxProd(array(0, -1, -2, 10, 5, 2)));
+        $this->execTest(200, array(0, -1, -2, 10, 5, 2));
 	}
 
 	/**
@@ -202,7 +207,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsEven_notExistsPositive()
 	{
-		$this->assertEquals(100, NumUtil::findMaxProd(array(0, -1, -2, -10, -5)));
+		$this->execTest(100, array(0, -1, -2, -10, -5));
 	}
 
 	/**
@@ -235,7 +240,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroLessThanOne_amountOfNegativeIsEven_existsPositive()
 	{
-		$this->assertEquals(100, NumUtil::findMaxProd(array( -1, -2, -10, -5, 1024)));
+		$this->execTest(100, array( -1, -2, -10, -5, 10));
 	}
 
 	/**
@@ -243,7 +248,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroLessThanOne_amountOfNegativeIsEven_notExistsPositive()
 	{
-		$this->assertEquals(-10, NumUtil::findMaxProd(array( -1, -2, -10, -5)));
+		$this->execTest(-10, array( -1, -2, -1024, -5));
 	}
 
 	/**
@@ -251,7 +256,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_existsPositive()
 	{
-		$this->assertEquals(200, NumUtil::findMaxProd(array(-2, -10, -5, 4)));
+		$this->execTest(200, array(-2, -10, -5, 4), self::INT_SIGN_POSI);
 	}
 
 	/**
@@ -259,7 +264,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_notExistsPositive()
 	{
-		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, -10, -5)));
+		$this->execTest(50, array(-2, -10, -5), self::INT_SIGN_POSI);
 	}
 
 	public function test_inputIsNotArrayDataProvider()
@@ -329,13 +334,13 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
             case self::INT_SIGN_POSI :
 				for($i = 0; $i < $length; $i++)
 				{
-					$int_arr[$i] = rand(1, 999);
+					$int_arr[$i] = rand(1, 99);
 				}
 				break;
             case self::INT_SIGN_NEGA :
 				for($i = 0; $i < $length; $i++)
 				{
-					$int_arr[$i] = rand(-999, -1);
+					$int_arr[$i] = 0 - rand(1, 99);
 				}
 				break;
             case self::INT_SIGN_ZERO :
@@ -347,10 +352,19 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
             case self::INT_SIGN_RAND :
 				for($i = 0; $i < $length; $i++)
 				{
-					$int_arr[$i] = rand(-999, 999);
+					$int_arr[$i] = $i % 2 ? rand(1, 99) : 0 - rand(0, 99);
 				}
 				break;
 		}
 		return $int_arr;
 	}
+
+    private function execTest($exp, array $arr, $sign = self::INT_SIGN_NEGA)
+    {
+        $randInt = self::INT_SIGN_POSI == $sign ? rand(1, 100) : 0 - rand(1, 99);
+        $arr[] = $randInt;
+        $arr[] = $randInt;
+        shuffle($arr);
+        $this->assertEquals($exp * $randInt * $randInt, NumUtil::findMaxProd($arr));
+    }
 }
