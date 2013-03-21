@@ -126,7 +126,7 @@ class NumUtil
  * ap: Amount of Positive, 正整数个数
  * an: Amount of Negative, 负数个数
  *
- * gt: Great Than, 大于
+ * gt: Greater Than, 大于
  * eq: Equal, 等于
  * lt: Less Than, 小于
  *
@@ -135,7 +135,7 @@ class NumUtil
  *
  * #################### MECE Tree ####################
  *参数输入正确的正常流程
- * 	零的个数大于1			@see TestCaseNumUtil::test_amountOfZeroGreatThanOne()
+ * 	零的个数大于1			@see TestCaseNumUtil::test_amountOfZeroGreaterThanOne()
  * 	零的个数等于1
  *		负数个数为偶数
  *			有正数		@see TestCaseNumUtil::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
@@ -155,11 +155,12 @@ class NumUtil
  *	输入的参数不是数组		@see TestCaseNumUtil::test_inputIsNotArray()
  * 	是个数组
  * 		元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLessThanTwoInteger()
- * 		不全是整数		@see TestCaseNumUtil::test_ArrayContainNonInteger()
+ *		元素多于2个
+ * 			不全是整数	@see TestCaseNumUtil::test_ArrayContainNonInteger()
  *
  *白盒测试
- *	元素个数超过int型上限 @see TestCaseNumUtil::test_amountOfZeroGreatThanMaxInt()
- *	元素的乘积超过PHP上限	@see TestCaseNumUtil::test_prodGreatThanMaxInt()
+ *	元素个数超过int型上限 @see TestCaseNumUtil::test_amountOfZeroGreaterThanMaxInt()
+ *	元素的乘积超过PHP上限	@see TestCaseNumUtil::test_prodGreaterThanMaxInt()
  *
  * #################### MECE Tree ####################
  */
@@ -170,7 +171,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 * 本来根据根据负数个数奇偶性、正数有无可以分成四种情况
 	 * 但这四种情况明显可以归并到这一种，因此不再分成四个条件来写
 	 */
-	public function test_amountOfZeroGreatThanOne()
+	public function test_amountOfZeroGreaterThanOne()
 	{
 		$arr = array_merge(
 			$this->produceIntArray(rand(2, 10), "zero"),
@@ -254,29 +255,35 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 
 	/**
 	 * 输入的参数不是数组
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_inputIsNotArray()
 	{
+		$this->assertEquals(50, NumUtil::findMaxProd(0));
 	}
 
 	/**
 	 * 数组元素个数小于2个
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_ArrayContainLessThanTwoInteger()
 	{
+		$this->assertEquals(50, NumUtil::findMaxProd(array(10)));
 	}
 
 	/**
 	 * 数组元素不全是整数
+	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_ArrayContainNonInteger()
 	{
+		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, TRUE, -5)));
 	}
 
 	/**
 	 * 如果代码中用整形来记录【零、正数、负数】的个数，输入的数组元素个数超过int型上限，就会造成数据溢出
 	 */
-	public function test_amountOfZeroGreatThanMaxInt()
+	public function test_amountOfZeroGreaterThanMaxInt()
 	{
 		//这种极端情况不支持，也不测试，写在这里仅仅表示我考虑到这点了
 	}
@@ -284,8 +291,9 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * N-1个元素的乘积超过PHP能表达的上限，就会造成数据溢出
 	 */
-	public function test_prodGreatThanMaxInt()
+	public function test_prodGreaterThanMaxInt()
 	{
+		//这种情况暂时不支持，也不测试，写在这里仅仅表示我考虑到这点了
 	}
 
 	private function  produceIntArray($length, $sign)
