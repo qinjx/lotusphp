@@ -126,16 +126,16 @@ class NumUtil
  * ap: Amount of Positive, 正整数个数
  * an: Amount of Negative, 负数个数
  *
- * gt: Greater Than, 大于
+ * gt: Great Than, 大于
  * eq: Equal, 等于
- * lt: Lesser Than, 小于
+ * lt: Less Than, 小于
  *
  * o: odd, 奇数
  * e: even, 偶数
  *
  * #################### MECE Tree ####################
  *参数输入正确的正常流程
- * 	零的个数大于1			@see TestCaseNumUtil::test_amountOfZeroGreaterThanOne()
+ * 	零的个数大于1			@see TestCaseNumUtil::test_amountOfZeroGreatThanOne()
  * 	零的个数等于1
  *		负数个数为偶数
  *			有正数		@see TestCaseNumUtil::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
@@ -145,21 +145,21 @@ class NumUtil
  *			无正数		@see TestCaseNumUtil::test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_notExistsPositive()
  * 	零的个数小于1
  *		负数个数为偶数
- *			有正数		@see TestCaseNumUtil::test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_existsPositive()
- * 			无正数       @see TestCaseNumUtil::test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_notExistsPositive()
+ *			有正数		@see TestCaseNumUtil::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_existsPositive()
+ * 			无正数       @see TestCaseNumUtil::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_notExistsPositive()
  * 		负数个数为奇数
- * 			有正数		@see TestCaseNumUtil::test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_existsPositive()
- *			无正数		@see TestCaseNumUtil::test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_notExistsPositive()
+ * 			有正数		@see TestCaseNumUtil::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_existsPositive()
+ *			无正数		@see TestCaseNumUtil::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_notExistsPositive()
  *
  *参数输入错误的异常流
  *	输入的参数不是数组		@see TestCaseNumUtil::test_inputIsNotArray()
  * 	是个数组
- * 		元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLesserThanTwoInteger()
+ * 		元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLessThanTwoInteger()
  * 		不全是整数		@see TestCaseNumUtil::test_ArrayContainNonInteger()
  *
  *白盒测试
- *	元素个数超过int型上限 @see TestCaseNumUtil::test_amountOfZeroGreaterThanMaxInt()
- *	元素的乘积超过PHP上限	@see TestCaseNumUtil::test_prodGreaterThanMaxInt()
+ *	元素个数超过int型上限 @see TestCaseNumUtil::test_amountOfZeroGreatThanMaxInt()
+ *	元素的乘积超过PHP上限	@see TestCaseNumUtil::test_prodGreatThanMaxInt()
  *
  * #################### MECE Tree ####################
  */
@@ -170,7 +170,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 * 本来根据根据负数个数奇偶性、正数有无可以分成四种情况
 	 * 但这四种情况明显可以归并到这一种，因此不再分成四个条件来写
 	 */
-	public function test_amountOfZeroGreaterThanOne()
+	public function test_amountOfZeroGreatThanOne()
 	{
 		$arr = array_merge(
 			$this->produceIntArray(rand(2, 10), "zero"),
@@ -223,7 +223,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 零的个数小于1 偶数个负数 有正数
 	 */
-	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_existsPositive()
+	public function test_amountOfZeroLessThanOne_amountOfNegativeIsEven_existsPositive()
 	{
 		$this->assertEquals(100, NumUtil::findMaxProd(array( -1, -2, -10, -5, 1024)));
 	}
@@ -231,7 +231,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 零的个数小于1 偶数个负数 无正数
 	 */
-	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_notExistsPositive()
+	public function test_amountOfZeroLessThanOne_amountOfNegativeIsEven_notExistsPositive()
 	{
 		$this->assertEquals(-10, NumUtil::findMaxProd(array( -1, -2, -10, -5)));
 	}
@@ -239,7 +239,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 零的个数小于1 奇数个负数 有正数
 	 */
-	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_existsPositive()
+	public function test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_existsPositive()
 	{
 		$this->assertEquals(200, NumUtil::findMaxProd(array(-2, -10, -5, 4)));
 	}
@@ -247,7 +247,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 零的个数小于1 奇数个负数 无正数
 	 */
-	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_notExistsPositive()
+	public function test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_notExistsPositive()
 	{
 		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, -10, -5)));
 	}
@@ -262,7 +262,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 数组元素个数小于2个
 	 */
-	public function test_ArrayContainLesserThanTwoInteger()
+	public function test_ArrayContainLessThanTwoInteger()
 	{
 	}
 
@@ -276,7 +276,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * 如果代码中用整形来记录【零、正数、负数】的个数，输入的数组元素个数超过int型上限，就会造成数据溢出
 	 */
-	public function test_amountOfZeroGreaterThanMaxInt()
+	public function test_amountOfZeroGreatThanMaxInt()
 	{
 		//这种极端情况不支持，也不测试，写在这里仅仅表示我考虑到这点了
 	}
@@ -284,7 +284,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	/**
 	 * N-1个元素的乘积超过PHP能表达的上限，就会造成数据溢出
 	 */
-	public function test_prodGreaterThanMaxInt()
+	public function test_prodGreatThanMaxInt()
 	{
 	}
 
