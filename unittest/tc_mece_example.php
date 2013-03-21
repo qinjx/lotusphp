@@ -12,7 +12,12 @@ class NumUtil
 	 */
 	static public function findMaxProd(array $arr)
 	{
-		$arr_len = count($arr);
+
+        $arr_len = count($arr);
+        if (2 > $arr_len)
+        {
+            return false;
+        }
 		/*
 		 * 先遍历数组找出零、负数、正数的数量
 		 * 只做统计，不排序，不做乘法
@@ -27,14 +32,18 @@ class NumUtil
 
 		for($i = 0; $i < $arr_len; $i++)
 		{
+            if (!is_int($arr[$i]))
+            {
+                return false;
+            }
 			if (0 > $arr[$i])
 			{
 				$amount_negative += 1;
-				if (null === $min_negative_index || $arr[$i] < $arr[$min_negative_index])
+				if (is_null($min_negative_index) || $arr[$i] < $arr[$min_negative_index])
 				{
 					$min_negative_index = $i;
 				}
-				if (null === $max_negative_index || $arr[$i] > $arr[$max_negative_index])
+				if (is_null($max_negative_index) || $arr[$i] > $arr[$max_negative_index])
 				{
 					$max_negative_index = $i;
 				}
@@ -47,7 +56,7 @@ class NumUtil
 			else
 			{
 				$amount_positive += 1;
-				if (null === $min_positive_index || $arr[$i] < $arr[$min_positive_index])
+				if (is_null($min_positive_index) || $arr[$i] < $arr[$min_positive_index])
 				{
 					$min_positive_index = $i;
 				}
@@ -174,8 +183,8 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	public function test_amountOfZeroGreaterThanOne()
 	{
 		$arr = array_merge(
-			$this->produceIntArray(rand(2, 10), "zero"),
-			$this->produceIntArray(rand(10, 20), "rand")
+			$this->produceIntArray(rand(2, 10), self::INT_SIGN_ZERO),
+			$this->produceIntArray(rand(10, 20), self::INT_SIGN_RAND)
 		);
 		$this->assertEquals(0, NumUtil::findMaxProd($arr));
 	}
@@ -202,9 +211,9 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_existsPositive()
 	{
 		$arr = array_merge(
-			$this->produceIntArray(11, "negative"),
+			$this->produceIntArray(11, self::INT_SIGN_NEGA),
 			array(0),
-			$this->produceIntArray(rand(1,10), "positive")
+			$this->produceIntArray(rand(1,10), self::INT_SIGN_POSI)
 		);
 		$this->assertEquals(0, NumUtil::findMaxProd($arr));
 	}
@@ -215,7 +224,7 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_notExistsPositive()
 	{
 		$arr = array_merge(
-			$this->produceIntArray(11, "negative"),
+			$this->produceIntArray(11, self::INT_SIGN_NEGA),
 			array(0)
 		);
 		$this->assertEquals(0, NumUtil::findMaxProd($arr));
@@ -253,31 +262,42 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, -10, -5)));
 	}
 
-	/**
+	public function test_inputIsNotArrayDataProvider()
+    {
+        return array(
+            array(NULL),
+            array(TRUE),
+            array(1024),
+            array(3.14),
+            array("not an array"),
+            array(new TestCaseNumUtil),
+        );
+    }
+
+    /**
 	 * 输入的参数不是数组
+     * @dataProvider test_inputIsNotArrayDataProvider
 	 * @expectedException PHPUnit_Framework_Error
 	 */
-	public function test_inputIsNotArray()
+	public function test_inputIsNotArray($arg)
 	{
-		$this->assertEquals(50, NumUtil::findMaxProd(0));
+        NumUtil::findMaxProd($arg);
 	}
 
 	/**
 	 * 数组元素个数小于2个
-	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_ArrayContainLessThanTwoInteger()
 	{
-		$this->assertEquals(50, NumUtil::findMaxProd(array(10)));
+        $this->assertFalse(NumUtil::findMaxProd(array(10)));
 	}
 
 	/**
 	 * 数组元素不全是整数
-	 * @expectedException PHPUnit_Framework_Error
 	 */
 	public function test_ArrayContainNonInteger()
 	{
-		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, TRUE, -5)));
+        $this->assertFalse(NumUtil::findMaxProd(array(-2, TRUE, -5)));
 	}
 
 	/**
@@ -296,30 +316,35 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 		//这种情况暂时不支持，也不测试，写在这里仅仅表示我考虑到这点了
 	}
 
+    const INT_SIGN_POSI = "positive";
+    const INT_SIGN_NEGA = "negative";
+    const INT_SIGN_ZERO = "zero";
+    const INT_SIGN_RAND = "RAND";
+
 	private function  produceIntArray($length, $sign)
 	{
 		$int_arr = array();
 		switch($sign)
 		{
-			case "positive":
+            case self::INT_SIGN_POSI :
 				for($i = 0; $i < $length; $i++)
 				{
 					$int_arr[$i] = rand(1, 999);
 				}
 				break;
-			case "negative":
+            case self::INT_SIGN_NEGA :
 				for($i = 0; $i < $length; $i++)
 				{
 					$int_arr[$i] = rand(-999, -1);
 				}
 				break;
-			case "zero":
+            case self::INT_SIGN_ZERO :
 				for($i = 0; $i < $length; $i++)
 				{
 					$int_arr[$i] = 0;
 				}
 				break;
-			case "rand":
+            case self::INT_SIGN_RAND :
 				for($i = 0; $i < $length; $i++)
 				{
 					$int_arr[$i] = rand(-999, 999);
