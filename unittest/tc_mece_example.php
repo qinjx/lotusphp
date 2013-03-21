@@ -10,9 +10,113 @@ class NumUtil
 	 * @param array $arr
 	 * @return integer
 	 */
-	public function findMaxProd(array $arr)
+	static public function findMaxProd(array $arr)
 	{
+		$arr_len = count($arr);
+		/*
+		 * 先遍历数组找出零、负数、正数的数量
+		 * 只做统计，不排序，不做乘法
+		 */
+		$amount_zero = 0;//零的个数
+		$amount_negative = 0;//负数个数
+		$amount_positive = 0;//正数个数
+		$min_positive_index = null;
+		$min_negative_index = null;
+		$max_negative_index = null;
+		$the_only_zero_index = null;
 
+		for($i = 0; $i < $arr_len; $i++)
+		{
+			if (0 > $arr[$i])
+			{
+				$amount_negative += 1;
+				if (null === $min_negative_index || $arr[$i] < $arr[$min_negative_index])
+				{
+					$min_negative_index = $i;
+				}
+				if (null === $max_negative_index || $arr[$i] > $arr[$max_negative_index])
+				{
+					$max_negative_index = $i;
+				}
+			}
+			else if (0 == $arr[$i])
+			{
+				$amount_zero += 1;
+				$the_only_zero_index = $i;
+			}
+			else
+			{
+				$amount_positive += 1;
+				if (null === $min_positive_index || $arr[$i] < $arr[$min_positive_index])
+				{
+					$min_positive_index = $i;
+				}
+			}
+		}
+		if (1 < $amount_zero)
+		{
+			/*
+			 * 0的个数大于1，任意取N-1个元素，其乘积都是0
+			 * 故无须再判断正数和负数的个数
+			 */
+			return 0;
+		}
+		else if (1 == $amount_zero)
+		{
+			if (1 == $amount_negative % 2)
+			{//奇数个负数
+				/*
+				 * 最大乘积只能是0，无需判断正数个数
+				 */
+				return 0;
+			} else {//偶数个负数
+				/*
+				 * 除0之外的N-1个整数乘积最大
+				 */
+				$pick_out_index = $the_only_zero_index;
+			}
+		}
+		else if (0 == $amount_zero)
+		{
+			if (1 == $amount_negative % 2)
+			{//奇数个负数
+				/*
+				 * 除【绝对值最小的负数】之外的N-1个整数乘积最大
+				 */
+				$pick_out_index = $max_negative_index;
+			}
+			else//偶数个负数
+			{
+				if (0 < $amount_positive)
+				{//存在正数
+					/*
+					 * 除【绝对值最小的正数】之外的N-1个整数乘积最大
+					 */
+					$pick_out_index = $min_positive_index;
+				}
+				else
+				{
+					/*
+					 * 除【绝对值最大的负数】之外的N-1个整数乘积最大
+					 * 乘积为负
+					 */
+					$pick_out_index = $min_negative_index;
+				}
+			}
+		}
+
+		/**
+		 * 若需要计算N-1个元素的乘积
+		 */
+		$prod = 1;
+		for($i = 0; $i < $arr_len; $i++)
+		{
+			if ($i != $pick_out_index)
+			{
+				$prod *= $arr[$i];
+			}
+		}
+		return $prod;
 	}
 }
 
@@ -49,14 +153,17 @@ class NumUtil
  *
  *参数输入错误的异常流
  *	输入的参数不是数组		@see TestCaseNumUtil::test_inputIsNotArray()
- * 	数组元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLesserThanTwoInteger()
+ * 	是个数组
+ * 		元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLesserThanTwoInteger()
+ * 		不全是整数		@see TestCaseNumUtil::test_ArrayContainNonInteger()
  *
  *白盒测试
  *	元素个数超过int型上限 @see TestCaseNumUtil::test_amountOfZeroGreaterThanMaxInt()
+ *	元素的乘积超过PHP上限	@see TestCaseNumUtil::test_prodGreaterThanMaxInt()
  *
  * #################### MECE Tree ####################
  */
-class TestCaseNumUtil
+class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * 零的个数大于1
@@ -65,6 +172,11 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroGreaterThanOne()
 	{
+		$arr = array_merge(
+			$this->produceIntArray(rand(2, 10), "zero"),
+			$this->produceIntArray(rand(10, 20), "rand")
+		);
+		$this->assertEquals(0, NumUtil::findMaxProd($arr));
 	}
 
 	/**
@@ -72,6 +184,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
 	{
+		$this->assertEquals(200, NumUtil::findMaxProd(array(0, -1, -2, 10, 5, 2)));
 	}
 
 	/**
@@ -79,6 +192,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsEven_notExistsPositive()
 	{
+		$this->assertEquals(100, NumUtil::findMaxProd(array(0, -1, -2, -10, -5)));
 	}
 
 	/**
@@ -86,6 +200,12 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_existsPositive()
 	{
+		$arr = array_merge(
+			$this->produceIntArray(11, "negative"),
+			array(0),
+			$this->produceIntArray(rand(1,10), "positive")
+		);
+		$this->assertEquals(0, NumUtil::findMaxProd($arr));
 	}
 
 	/**
@@ -93,6 +213,11 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_notExistsPositive()
 	{
+		$arr = array_merge(
+			$this->produceIntArray(11, "negative"),
+			array(0)
+		);
+		$this->assertEquals(0, NumUtil::findMaxProd($arr));
 	}
 
 	/**
@@ -100,6 +225,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_existsPositive()
 	{
+		$this->assertEquals(100, NumUtil::findMaxProd(array( -1, -2, -10, -5, 1024)));
 	}
 
 	/**
@@ -107,6 +233,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsEven_notExistsPositive()
 	{
+		$this->assertEquals(-10, NumUtil::findMaxProd(array( -1, -2, -10, -5)));
 	}
 
 	/**
@@ -114,6 +241,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_existsPositive()
 	{
+		$this->assertEquals(200, NumUtil::findMaxProd(array(-2, -10, -5, 4)));
 	}
 
 	/**
@@ -121,6 +249,7 @@ class TestCaseNumUtil
 	 */
 	public function test_amountOfZeroLesserThanOne_amountOfNegativeIsOdd_notExistsPositive()
 	{
+		$this->assertEquals(50, NumUtil::findMaxProd(array(-2, -10, -5)));
 	}
 
 	/**
@@ -128,7 +257,6 @@ class TestCaseNumUtil
 	 */
 	public function test_inputIsNotArray()
 	{
-		//这种极端情况不支持，也不测试，写在这里仅仅表示我考虑到这点了
 	}
 
 	/**
@@ -136,7 +264,13 @@ class TestCaseNumUtil
 	 */
 	public function test_ArrayContainLesserThanTwoInteger()
 	{
-		//这种极端情况不支持，也不测试，写在这里仅仅表示我考虑到这点了
+	}
+
+	/**
+	 * 数组元素不全是整数
+	 */
+	public function test_ArrayContainNonInteger()
+	{
 	}
 
 	/**
@@ -145,5 +279,45 @@ class TestCaseNumUtil
 	public function test_amountOfZeroGreaterThanMaxInt()
 	{
 		//这种极端情况不支持，也不测试，写在这里仅仅表示我考虑到这点了
+	}
+
+	/**
+	 * N-1个元素的乘积超过PHP能表达的上限，就会造成数据溢出
+	 */
+	public function test_prodGreaterThanMaxInt()
+	{
+	}
+
+	private function  produceIntArray($length, $sign)
+	{
+		$int_arr = array();
+		switch($sign)
+		{
+			case "positive":
+				for($i = 0; $i < $length; $i++)
+				{
+					$int_arr[$i] = rand(1, 999);
+				}
+				break;
+			case "negative":
+				for($i = 0; $i < $length; $i++)
+				{
+					$int_arr[$i] = rand(-999, -1);
+				}
+				break;
+			case "zero":
+				for($i = 0; $i < $length; $i++)
+				{
+					$int_arr[$i] = 0;
+				}
+				break;
+			case "rand":
+				for($i = 0; $i < $length; $i++)
+				{
+					$int_arr[$i] = rand(-999, 999);
+				}
+				break;
+		}
+		return $int_arr;
 	}
 }
