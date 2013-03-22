@@ -169,7 +169,7 @@ class NumUtil
  *	输入的参数不是数组		@see TestCaseNumUtil::test_inputIsNotArray()
  * 	是个数组
  * 		元素个数小于2个	@see TestCaseNumUtil::test_ArrayContainLessThanTwoInteger()
- *		元素多于2个
+ *		元素大于等于2个
  * 			不全是整数	@see TestCaseNumUtil::test_ArrayContainNonInteger()
  *
  *白盒测试
