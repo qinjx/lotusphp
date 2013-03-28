@@ -1,11 +1,11 @@
 <?php
-protected function loadFunctionFiles()
+class DummyTestCase extends PHPUnit_Framework_TestCase
 {
-    if ($this->isLoadFunction && count($this->functionFiles))
+    /**
+     * @test
+     */
+    public function 测试用例()
     {
-        foreach ($this->functionFiles as $functionFile)
-        {
-            include_once($functionFile);
-        }
+        $this->assertTrue(TRUE);
     }
 }

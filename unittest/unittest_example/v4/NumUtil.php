@@ -1,11 +1,7 @@
 <?php
-/**
- * 再来看看整合后的测试用例MECE树，真的MECE了吗？
- * 艾玛，好像没考虑入参不合法的情况
- */
 class NumUtil
 {
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);

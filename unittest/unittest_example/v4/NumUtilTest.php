@@ -1,10 +1,14 @@
 <?php
 include "NumUtil.php";
+/**
+ * 再来看看整合后的测试用例MECE树，真的MECE了吗？
+ * 艾玛，好像没考虑入参不合法的情况
+ */
 class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 {
 	public function test1()
 	{
-		$this->assertEquals(120, NumUtil::findMaxProd(array(2,3,4,5,1)));
+		$this->assertEquals(120, $this->numUtil->findMaxProd(array(2,3,4,5,1)));
 	}
 
 	/**
@@ -12,6 +16,6 @@ class TestCaseNumUtil extends PHPUnit_Framework_TestCase
 	 */
 	public function test2()
 	{
-		$this->assertEquals(720, NumUtil::findMaxProd(array(6, 5, 4, 3, 2, 1,0)));
+		$this->assertEquals(720, $this->numUtil->findMaxProd(array(6, 5, 4, 3, 2, 1,0)));
 	}
 }

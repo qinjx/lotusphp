@@ -1,11 +1,7 @@
 <?php
-/**
- * 哎呀，上一版本的测试用例好像够多了，但是不能书面证明呢
- * 让我们在白板上画个脑图
- */
-class NumUtil
+class NumUtilV2
 {
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);

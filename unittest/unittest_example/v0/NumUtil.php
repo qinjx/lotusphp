@@ -1,7 +1,7 @@
 <?php
-class NumUtil
+class NumUtilV0
 {
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);

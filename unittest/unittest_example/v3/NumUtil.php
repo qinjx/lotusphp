@@ -1,11 +1,7 @@
 <?php
-/**
- * 哎呀，画脑力毕竟不方便，一个开发维护一份脑图，一份测试代码，总有一次更新会忘了其中一个的
- * 那咱们用@see注释把它们融合到一个IDE中来吧
- */
 class NumUtil
 {
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);

@@ -1,11 +1,7 @@
 <?php
-/**
- * 这次总譔可以了吧，不，有点不放心，要是测试用例里的数据稍稍换一换呢？
- *
- */
 class NumUtil
 {
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);
