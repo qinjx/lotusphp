@@ -5,7 +5,7 @@ class NumUtilV5
 	 * @param array $arr
 	 * @return integer
 	 */
-	static public function findMaxProd(array $arr)
+	public function findMaxProd(array $arr)
 	{
 
 		$arr_len = count($arr);
