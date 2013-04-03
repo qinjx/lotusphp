@@ -14,10 +14,21 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @test
+	 * 输入条件测试
+	 * 异常测试参见@see InterfaceTestV7
 	 */
 	public function checkInput()
 	{
+		for($i = 0; $i < 100; $i++)
+		{
+			$arraySize = rand(2, 999);
+			for($j = 0; $j < $arraySize; $j ++)
+			{
+				$arr[$j] = rand(-999, 999);
+			}
+			$this->assertTrue($this->tp->checkInput($arr));
 
+		}
 	}
 
 	/**
@@ -75,7 +86,8 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @test
-	 * 测试排除1个元素的功能
+	 * 测试@see NumUtilV7::kickOffOneNumber
+	 * 排除1个元素的功能
 	 */
 	public function kickOffOneNumber()
 	{
@@ -145,7 +157,7 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @test
-	 * 测试NumUtilV7::calcProd()方法
+	 * 测试@see NumUtilV7::calcProd()方法
 	 * 构造一个随机数组，从中随机取出一个，交给calcProd()方法计算乘积，再乘以刚才随机取出的那个数，与array_product()的计算结果对比
 	 * 上述测试重复100次
 	 */

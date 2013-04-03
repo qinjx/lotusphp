@@ -31,7 +31,7 @@ include "NumUtilV7.php";
  *
  * #################### MECE Tree ####################
  */
-class TestCaseNumUtilV7 extends PHPUnit_Framework_TestCase
+class InterfaceTestV7 extends PHPUnit_Framework_TestCase
 {
 	private $numUtil;
 	public function setUp()
