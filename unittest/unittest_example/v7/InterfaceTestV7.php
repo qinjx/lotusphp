@@ -2,8 +2,6 @@
 include "NumUtilV7.php";
 
 /**
- * 这次总譔可以了吧，不，有点不放心，要是测试用例里的数据稍稍换一换呢？
- *
  * #################### MECE Tree ####################
  *参数输入正确的正常流程
  * 	零的个数大于1			@see TestCaseNumUtilV7::test_amountOfZeroGreaterThanOne()

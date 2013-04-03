@@ -3,6 +3,11 @@ include "NumUtilV7.php";
 include "TestProxyV7.php";
 
 /**
+ * v6版的测试数据不好构造，将NumUtil类拆分成四个protected方法，暴露findMaxProd()给外部调用
+ * findMaxProd只是简单的流程控制，可以通过接口测试（@see InterfaceTestV7）验证正确性
+ *
+ * 以尽可能完备的用例单独测试这四个方法，如果也通过，则可以相信这个类的质量
+ * 拆分后，随机测试数据更容易构造了，但时间复杂度稍有提高，由2 O(N)提升到了3 O(N)，不过还是级性阶，只是常数变大了一点
  */
 class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 {
@@ -27,7 +32,6 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 				$arr[$j] = rand(-999, 999);
 			}
 			$this->assertTrue($this->tp->checkInput($arr));
-
 		}
 	}
 
