@@ -1,34 +1,33 @@
 <?php
 include "NumUtilV7.php";
-include "../v4/NumUtilV4.php";
 
 /**
  * 这次总譔可以了吧，不，有点不放心，要是测试用例里的数据稍稍换一换呢？
  *
  * #################### MECE Tree ####################
  *参数输入正确的正常流程
- * 	零的个数大于1			@see TestCaseNumUtilV5::test_amountOfZeroGreaterThanOne()
+ * 	零的个数大于1			@see TestCaseNumUtilV7::test_amountOfZeroGreaterThanOne()
  * 	零的个数等于1
  *		负数个数为偶数
- *			有正数		@see TestCaseNumUtilV5::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
- * 			无正数	   @see TestCaseNumUtilV5::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_notExistsPositive()
+ *			有正数		@see TestCaseNumUtilV7::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_existsPositive()
+ * 			无正数	   @see TestCaseNumUtilV7::test_amountOfZeroEqualsOne_amountOfNegativeIsEven_notExistsPositive()
  * 		负数个数为奇数
- * 			有正数		@see TestCaseNumUtilV5::test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_existsPositive()
- *			无正数		@see TestCaseNumUtilV5::test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_notExistsPositive()
+ * 			有正数		@see TestCaseNumUtilV7::test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_existsPositive()
+ *			无正数		@see TestCaseNumUtilV7::test_amountOfZeroEqualsOne_amountOfNegativeIsOdd_notExistsPositive()
  * 	零的个数小于1
  *		负数个数为偶数
- *			有正数		@see TestCaseNumUtilV5::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_existsPositive()
- * 			无正数	   @see TestCaseNumUtilV5::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_notExistsPositive()
+ *			有正数		@see TestCaseNumUtilV7::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_existsPositive()
+ * 			无正数	   @see TestCaseNumUtilV7::test_amountOfZeroLessThanOne_amountOfNegativeIsEven_notExistsPositive()
  * 		负数个数为奇数
- * 			有正数		@see TestCaseNumUtilV5::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_existsPositive()
- *			无正数		@see TestCaseNumUtilV5::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_notExistsPositive()
+ * 			有正数		@see TestCaseNumUtilV7::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_existsPositive()
+ *			无正数		@see TestCaseNumUtilV7::test_amountOfZeroLessThanOne_amountOfNegativeIsOdd_notExistsPositive()
  *
  *参数输入错误的异常流
- *	输入的参数不是数组		@see TestCaseNumUtilV5::test_inputIsNotArray()
+ *	输入的参数不是数组		@see TestCaseNumUtilV7::test_inputIsNotArray()
  * 	是个数组
- * 		元素个数小于2个	@see TestCaseNumUtilV5::test_ArrayContainLessThanTwoInteger()
+ * 		元素个数小于2个	@see TestCaseNumUtilV7::test_ArrayContainLessThanTwoInteger()
  *		元素大于等于2个
- * 			不全是整数	@see TestCaseNumUtilV5::test_ArrayContainNonInteger()
+ * 			不全是整数	@see TestCaseNumUtilV7::test_ArrayContainNonInteger()
  *
  * #################### MECE Tree ####################
  */
