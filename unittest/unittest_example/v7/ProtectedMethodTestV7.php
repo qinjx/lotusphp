@@ -22,6 +22,9 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @test
+	 * 测试NumUtilV7::statNumber方法
+	 * 构造一个数组，由随机的正数、负数和零组成（他们的个数都可能为0）
+	 * 上述测试重复100次
 	 */
 	public function statNumber()
 	{
@@ -72,10 +75,11 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @test
+	 * 测试排除1个元素的功能
 	 */
 	public function kickOffOneNumber()
 	{
-		for($i = 0; $i < 10; $i++)
+		for($i = 0; $i < 100; $i++)
 		{
 			$arr = array(
 				"min_p" => rand(1, 99),
@@ -83,19 +87,65 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 				"min_n" => rand(-999, -111),
 			);
 
+			//0的个数大于1
+			$arr["az"] = rand(2, 100);
+			$arr["an"] = rand(0, 100);
+			$arr["ap"] = rand(0, 100);
+			$this->assertEquals(NumUtilV7::MAX_PROD_IS_ZERO, $this->tp->kickOffOneNumber($arr));
 
-			$arr["az"] = rand(1, 100);
-			$arr["an"] = rand(-99, -1);
-			$arr["ap"] = rand(10, 20);
-			$this->assertEquals(
-				1,
-				1
-			);
+			//0的个数等于1	奇数个负数	无正数
+			$arr["az"] = 1;
+			$arr["an"] = rand(0, 100) * 2 + 1;
+			$arr["ap"] = 0;
+			$this->assertEquals(NumUtilV7::MAX_PROD_IS_ZERO, $this->tp->kickOffOneNumber($arr));
+
+			//0的个数等于1	奇数个负数	有正数
+			$arr["az"] = 1;
+			$arr["an"] = rand(0, 100) * 2 + 1;
+			$arr["ap"] = rand(1, 100);
+			$this->assertEquals(NumUtilV7::MAX_PROD_IS_ZERO, $this->tp->kickOffOneNumber($arr));
+
+			//0的个数等于1	偶数个负数	无正数
+			$arr["az"] = 1;
+			$arr["an"] = rand(0, 100) * 2;
+			$arr["ap"] = 0;
+			$this->assertEquals(0, $this->tp->kickOffOneNumber($arr));
+
+			//0的个数等于1	偶数个负数	有正数
+			$arr["az"] = 1;
+			$arr["an"] = rand(0, 100) * 2;
+			$arr["ap"] = rand(1, 100);
+			$this->assertEquals(0, $this->tp->kickOffOneNumber($arr));
+
+			//0的个数小于1	奇数个负数	无正数
+			$arr["az"] = 0;
+			$arr["an"] = rand(0, 100) * 2 + 1;
+			$arr["ap"] = 0;
+			$this->assertEquals($arr["max_n"], $this->tp->kickOffOneNumber($arr));
+
+			//0的个数小于1	奇数个负数	有正数
+			$arr["az"] = 0;
+			$arr["an"] = rand(0, 100) * 2 + 1;
+			$arr["ap"] = rand(1, 100);
+			$this->assertEquals($arr["max_n"], $this->tp->kickOffOneNumber($arr));
+
+			//0的个数小于1	偶数个负数	无正数
+			$arr["az"] = 0;
+			$arr["an"] = rand(0, 100) * 2;
+			$arr["ap"] = 0;
+			$this->assertEquals($arr["min_n"], $this->tp->kickOffOneNumber($arr));
+
+			//0的个数小于1	偶数个负数	有正数
+			$arr["az"] = 0;
+			$arr["an"] = rand(0, 100) * 2;
+			$arr["ap"] = rand(1, 100);
+			$this->assertEquals($arr["min_p"], $this->tp->kickOffOneNumber($arr));
 		}
 	}
 
 	/**
 	 * @test
+	 * 测试NumUtilV7::calcProd()方法
 	 * 构造一个随机数组，从中随机取出一个，交给calcProd()方法计算乘积，再乘以刚才随机取出的那个数，与array_product()的计算结果对比
 	 * 上述测试重复100次
 	 */
@@ -112,12 +162,6 @@ class ProtectedMethodTestV7 extends PHPUnit_Framework_TestCase
 
 			$exp = array_product($arr);
 			$actual = $this->tp->calcProd($arr, $arr[$kickOffIndex]);
-//			if ($exp != $actual * $arr[$kickOffIndex])
-//			{
-//				print_r($arr);
-//				var_dump($this->tp->calcProd($arr, $arr[$kickOffIndex]));
-//				var_dump($arr[$kickOffIndex]);
-//			}
 			$this->assertEquals(
 				$exp,
 				$actual * $arr[$kickOffIndex]
