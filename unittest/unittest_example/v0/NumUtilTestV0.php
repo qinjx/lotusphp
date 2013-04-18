@@ -2,12 +2,12 @@
 /**
  * 兴高采烈地随意写了两个测试用例，不就是排除最小值嘛
  */
+include "NumUtilV0.php";
 class TestCaseNumUtilV0 extends PHPUnit_Framework_TestCase
 {
     private $numUtil;
     public function setUp()
     {
-        include "NumUtil.php";
         $this->numUtil = new NumUtilV0;
     }
 

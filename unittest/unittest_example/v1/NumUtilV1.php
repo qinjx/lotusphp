@@ -12,7 +12,6 @@ class NumUtilV1
          */
         $amount_zero = 0;//零的个数
         $amount_negative = 0;//负数个数
-        $amount_positive = 0;//正数个数
         $min_positive_index = null;
         $min_negative_index = null;
         $max_negative_index = null;
@@ -39,7 +38,6 @@ class NumUtilV1
             }
             else
             {
-                $amount_positive += 1;
                 if (null == $min_positive_index || $arr[$i] < $arr[$min_positive_index])
                 {
                     $min_positive_index = $i;
@@ -84,21 +82,7 @@ class NumUtilV1
             }
             else//偶数个负数
             {
-                if (0 < $amount_positive)
-                {//存在正数
-                    /*
-                     * 除【绝对值最小的正数】之外的N-1个整数乘积最大
-                     */
-                    $pick_out_index = $min_positive_index;
-                }
-                else
-                {
-                    /*
-                     * 除【绝对值最大的负数】之外的N-1个整数乘积最大
-                     * 乘积为负
-                     */
-                    $pick_out_index = $min_negative_index;
-                }
+                $pick_out_index = $min_positive_index;
             }
         }
 
