@@ -48,7 +48,7 @@ class LtAutoloader
 	 * 若该属性设置为array(".svn", ".setting")，
 	 * 则所有名为".setting"的目录也会被忽略
 	 */
-	public $skipDirNames = array('.svn', '.git');
+	public $skipDirNames = array('.svn', '.git', '.DS_Store');
 
 	/** @var LtStoreFile 存储句柄默认使用 @link LtStoreFile */
 	public $storeHandle;
