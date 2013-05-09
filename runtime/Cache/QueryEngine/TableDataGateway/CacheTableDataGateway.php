@@ -18,7 +18,7 @@ class LtCacheTableDataGateway
 	/** @var string table name */
 	public $tableName;
 
-	/** @var LtCacheHandle 缓存适配器的一个实例句柄 */
+	/** @var LtCacheHandle 缓存句柄实例 */
 	public $ch;
 
 	/**
