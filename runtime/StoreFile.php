@@ -63,8 +63,6 @@ class LtStoreFile implements LtStore
 	 */
 	public function add($key, $value)
 	{
-        if ($this->hasBeenInited)
-        {
 		$file = $this->getFilePath($key);
 		$cachePath = pathinfo($file, PATHINFO_DIRNAME);
 		if (!is_dir($cachePath))
@@ -80,12 +78,6 @@ class LtStoreFile implements LtStore
 		}
 		$length = file_put_contents($file, serialize($value));
 		return $length > 0 ? true : false;
-        }
-        else
-        {
-            trigger_error("init() method must be called");
-            return false;
-        }
 	}
 
 	/**
