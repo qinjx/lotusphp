@@ -100,6 +100,7 @@ class Lotus
 		if (!empty($this->defaultStoreDir))
 		{
 			$this->cache_dir = $this->defaultStoreDir;
+            $this->cache_dir = rtrim($this->cache_dir, '\\/') . '/';
 		}
 
 		/**
