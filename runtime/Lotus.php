@@ -146,9 +146,13 @@ class Lotus
 		}
 		if ($this->proj_dir)
 		{
-			is_dir($this->proj_dir . 'lib') && $autoloader->autoloadPath[] = $this->proj_dir . 'lib';
-			is_dir($this->app_dir . 'action') && $autoloader->autoloadPath[] = $this->app_dir . 'action';
-			is_dir($this->app_dir . 'lib') && $autoloader->autoloadPath[] = $this->app_dir . 'lib';
+            foreach(array($this->proj_dir . 'lib', $this->app_dir . 'action', $this->app_dir . 'lib') as $dir)
+            {
+                if (is_dir($dir))
+                {
+                    $autoloader->autoloadPath[] = $dir;
+                }
+            }
 		}
 
 		$autoloader->storeHandle = clone $this->coreCacheHandle;
