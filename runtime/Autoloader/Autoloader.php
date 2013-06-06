@@ -418,7 +418,10 @@ class LtAutoloader
             }
 			else
             {
-                trigger_error("Can't find any class/function in file: $filePath");
+                /*
+                 * Can't find any class/function in file: $filePath
+                 * But, don't send error message, this should be done by PHP Code Sniffer
+                 */
             }
 		}
         else
