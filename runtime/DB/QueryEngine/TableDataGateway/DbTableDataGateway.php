@@ -93,7 +93,8 @@ class LtDbTableDataGateway
 	 */
 	public function count($args = null)
 	{
-		$selectTemplate = 'SELECT COUNT(*) AS total FROM %s%s';
+		$countKey = isset($args['groupby']) ? 'DISTINCT ' . $args['groupby'] : '*';
+		$selectTemplate = 'SELECT COUNT(' . $countKey . ') AS total FROM %s%s';
 		$where = isset($args['where']['expression']) ? ' WHERE ' . $args['where']['expression'] : '';
 		$bind = isset($args['where']['value']) ? $args['where']['value'] : array();
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
