@@ -97,9 +97,10 @@ class LtDbTableDataGateway
 		$where = isset($args['where']['expression']) ? ' WHERE ' . $args['where']['expression'] : '';
 		$bind = isset($args['where']['value']) ? $args['where']['value'] : array();
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
-		$sql = sprintf($selectTemplate, $this->tableName, $join . $where);
+		$groupby = isset($args['groupby']) ? ' GROUP BY ' . $args['groupby'] : '';
+		$sql = sprintf($selectTemplate, $this->tableName, $join . $where . $groupby);
 		$queryResult = $this->dbh->query($sql, $bind);
-		return $queryResult[0]['total'];
+		return count($queryResult) > 1 ? count($queryResult) : $queryResult[0]['total'];
 	}
 
 	/**
