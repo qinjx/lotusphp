@@ -275,13 +275,11 @@ class RightWayToUseDb extends PHPUnit_Framework_TestCase
 		$this->assertEquals(2, $id = $tg2->insert(array("id" => 2, "username" => "talkativedoggy")));
 		$this->assertEquals(array("id" => 2, "username" => "talkativedoggy"), $tg2->fetch($id));
 		
-		//使用Table Gateway查询引擎 Group By 参数
+		//使用Table Gateway查询引擎 Group By 测试
 		$tg2 = $db2->getTDG("user_account");
 		$this->assertEquals(3, $id = $tg2->insert(array("id" => 3, "username" => "laoliu")));
 		$this->assertEquals(4, $id = $tg2->insert(array("id" => 4, "username" => "laoliu")));
-		$this->assertEquals(5, $id = $tg2->insert(array("id" => 5, "username" => "laoliu")));
-		$this->assertEquals(array(), $tg2->fetchRows(array("groupby" => "username")));
-		$this->assertEquals(array(), $tg2->count(array("groupby" => "username")));
+		$this->assertEquals(2, $tg2->count(array("groupby" => "username")));
 	}
 
 	/**
