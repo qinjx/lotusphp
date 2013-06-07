@@ -280,8 +280,8 @@ class RightWayToUseDb extends PHPUnit_Framework_TestCase
 		$this->assertEquals(3, $id = $tg2->insert(array("id" => 3, "username" => "laoliu")));
 		$this->assertEquals(4, $id = $tg2->insert(array("id" => 4, "username" => "laoliu")));
 		$this->assertEquals(5, $id = $tg2->insert(array("id" => 5, "username" => "laoliu")));
-		$this->assertEquals(array(), $tg2->fetchRows(array("groupby" => "username")));
-		$this->assertEquals(array(), $tg2->count(array("groupby" => "username")));
+		$this->assertEquals(1, $tg2->fetchRows(array("groupby" => "username")));
+		$this->assertEquals(1, $tg2->count(array("groupby" => "username")));
 	}
 
 	/**
