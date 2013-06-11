@@ -41,13 +41,13 @@ class LtConfig
 	 */
 	public function init()
 	{
-		//don't removeme, I am the placeholder
+		//don't remove me, I am the placeholder
 	}
 
 	/**
 	 * 根据名称读取配置内容
-	 * @param type $key
-	 * @return \LtConfigExpression | value |string
+	 * @param string $key
+	 * @return mixed
 	 */
 	public function get($key)
 	{

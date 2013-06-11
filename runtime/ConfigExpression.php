@@ -20,8 +20,8 @@ class LtConfigExpression
 	public $autoRetrived;
 	
 	/**
-	 * construct
-	 * @param type $string
+	 * constructor
+	 * @param string $string
 	 * @param boolean $autoRetrived
 	 */
 	public function __construct($string, $autoRetrived = true)

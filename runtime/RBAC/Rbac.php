@@ -48,7 +48,7 @@ class LtRbac {
 
 	/**
 	 * check acl
-	 * @param string $roles
+	 * @param array $roles
 	 * @param string $resource
 	 * @return boolean
 	 */
