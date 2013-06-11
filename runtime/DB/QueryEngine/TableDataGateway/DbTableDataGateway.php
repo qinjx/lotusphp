@@ -44,7 +44,7 @@ class LtDbTableDataGateway
 	/**
 	 * Build table's field list
 	 * 
-	 * @return array 
+	 * @return void | boolean
 	 */
 	protected function buildFieldList()
 	{
@@ -179,7 +179,8 @@ class LtDbTableDataGateway
 			$offset = isset($args['offset']) ? $args['offset'] : 0;
 			$sql = $sql . ' ' . $this->dbh->sqlAdapter->limit($args['limit'], $offset);
 		}
-		return $this->dbh->query($sql, $bind);
+        $forceUseMaster = !$useSlave;
+		return $this->dbh->query($sql, $bind, $forceUseMaster);
 	}
 
 	/**
@@ -194,7 +195,7 @@ class LtDbTableDataGateway
 		$this->buildFieldList();
 		$insertTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
 		$fields = array();
-		$placeHolders = array();
+		$placeholders = array();
 		foreach ($args as $field => $value)
 		{
 			if (isset($this->fields[$field]))
