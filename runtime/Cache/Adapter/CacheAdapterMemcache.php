@@ -17,11 +17,10 @@ class LtCacheAdapterMemcache implements LtCacheAdapter
 	/**
 	 * connect
 	 * @param array $hostConf
-	 * @return resource
 	 */
 	public function connect($hostConf)
 	{
-		return memcache_connect($hostConf["host"], $hostConf["port"]);
+		memcache_connect($hostConf["host"], $hostConf["port"]);
 	}
 
 	/**
@@ -65,8 +64,8 @@ class LtCacheAdapterMemcache implements LtCacheAdapter
 	/**
 	 * update
 	 * @param string $key
-	 * @param string|array|object $value
-	 * @param string $ttl
+	 * @param mixed $value
+	 * @param int $ttl
 	 * @param string $tableName
 	 * @param resource $connectionResource
 	 * @return boolean

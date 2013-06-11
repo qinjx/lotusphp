@@ -8,7 +8,7 @@
  */
 
 /**
- * LtDbTableDataGaateway
+ * LtDbTableDataGateway
  * @author Jianxiang Qin <TalkativeDoggy@gmail.com>
  * @category runtime
  * @package   Lotusphp\DB\QueryEngine
@@ -44,44 +44,43 @@ class LtDbTableDataGateway
 	/**
 	 * Build table's field list
 	 * 
-	 * @return void | boolean
+	 * @return void
 	 */
 	protected function buildFieldList()
 	{
-		if (!empty($this->fields))
+		if (empty($this->fields))
 		{
-			return true;
-		}
-		$servers = $this->configHandle->get('db.servers');
-		$group = $this->dbh->group;
-		$node = $this->dbh->node;
-		$role = $this->dbh->role;
-		$table = $this->tableName;
-		$host = key($servers[$group][$node][$role]);
-		$key = md5($group . $node . $role . $table . $host . $table);
-		if (!$value = $this->configHandle->get($key))
-		{
-			$sql = $this->dbh->sqlAdapter->showFields($this->tableName);
-			$rs = $this->dbh->query($sql);
-			$this->fields = $this->dbh->sqlAdapter->getFields($rs);
-			foreach ($this->fields as $field)
-			{
-				if ($field['primary'] == 1)
-				{
-					$this->primaryKey = $field['name'];
-					break;
-				}
-			}
+            $servers = $this->configHandle->get('db.servers');
+            $group = $this->dbh->group;
+            $node = $this->dbh->node;
+            $role = $this->dbh->role;
+            $table = $this->tableName;
+            $host = key($servers[$group][$node][$role]);
+            $key = md5($group . $node . $role . $table . $host . $table);
+            if (!$value = $this->configHandle->get($key))
+            {
+                $sql = $this->dbh->sqlAdapter->showFields($this->tableName);
+                $rs = $this->dbh->query($sql);
+                $this->fields = $this->dbh->sqlAdapter->getFields($rs);
+                foreach ($this->fields as $field)
+                {
+                    if ($field['primary'] == 1)
+                    {
+                        $this->primaryKey = $field['name'];
+                        break;
+                    }
+                }
 
-			$value['fields'] = $this->fields;
-			$value['primaryKey'] = $this->primaryKey;
-			$this->configHandle->addConfig(array($key => $value));
-		}
-		else
-		{
-			$this->fields = $value['fields'];
-			$this->primaryKey = $value['primaryKey'];
-		}
+                $value['fields'] = $this->fields;
+                $value['primaryKey'] = $this->primaryKey;
+                $this->configHandle->addConfig(array($key => $value));
+            }
+            else
+            {
+                $this->fields = $value['fields'];
+                $this->primaryKey = $value['primaryKey'];
+            }
+        }
 	}
 
 	/**
@@ -198,6 +197,7 @@ class LtDbTableDataGateway
 		$insertTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
 		$fields = array();
 		$placeholders = array();
+        $values = array();
 		foreach ($args as $field => $value)
 		{
 			if (isset($this->fields[$field]))
@@ -261,7 +261,7 @@ class LtDbTableDataGateway
 		{
 			if (isset($this->fields[$field]))
 			{
-				if ($args[$field] instanceof DbExpression)
+				if ($args[$field] instanceof LtDbSqlExpression)
 				{
 					$fields[] = "$field=" . $args[$field]->__toString();
 				}

@@ -128,8 +128,9 @@ class LtDbSqlAdapterMysql implements LtDbSqlAdapter
 	 */
 	public function getFields($queryResult)
 	{
-		foreach ($queryResult as $value)
-		{
+		$fields = array();
+        foreach ($queryResult as $value)
+        {
 			$fields[$value['Field']]['name'] = $value['Field'];
 			$fields[$value['Field']]['type'] = $value['Type'];
 			/*
