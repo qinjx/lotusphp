@@ -87,11 +87,12 @@ class LtDbTableDataGateway
 	/**
 	 * A shortcut to SELECT COUNT(*) FROM table WHERE condition
 	 * 
-	 * @param array $args 
+	 * @param array $args
+     * @param boolean $useSlave
 	 * @return integer 
 	 * @example count(array('expression' => 'id < :id', 'value' => array('id' => 10)));
 	 */
-	public function count($args = null)
+	public function count($args = null, $useSlave=true)
 	{
 		$countKey = isset($args['groupby']) ? 'DISTINCT ' . $args['groupby'] : '*';
 		$selectTemplate = 'SELECT COUNT(' . $countKey . ') AS total FROM %s%s';
@@ -99,7 +100,8 @@ class LtDbTableDataGateway
 		$bind = isset($args['where']['value']) ? $args['where']['value'] : array();
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
 		$sql = sprintf($selectTemplate, $this->tableName, $join . $where);
-		$queryResult = $this->dbh->query($sql, $bind);
+        $forceUseMaster = !$useSlave;
+		$queryResult = $this->dbh->query($sql, $bind, $forceUseMaster);
 		return $queryResult[0]['total'];
 	}
 
