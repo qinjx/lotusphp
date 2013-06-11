@@ -134,7 +134,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	public function getFields($queryResult)
 	{
 		$fields = array();
-		foreach ($queryResult as $key => $value)
+		foreach ($queryResult as $value)
 		{
 			// 字段名
 			$fields[$value['name']]['name'] = $value['name'];
