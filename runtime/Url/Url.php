@@ -113,7 +113,6 @@ class LtUrl
 			$this->baseUrl = $baseUrl;
 		}
 		$protocol = $protocol ? strtoupper($protocol) : $this->protocol;
-		$url = '';
 		switch ($protocol)
 		{
 			case 'REWRITE':

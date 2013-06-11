@@ -255,10 +255,10 @@ class LtXml {
 
 	/**
 	 * 生成一个xml节点
-	 * @param string tag 标签名
-	 * @param string cdata 数据
-	 * @param array attr 属性列表
-	 * @param array sub 子标签列表
+	 * @param string $tag 标签名
+	 * @param string $cdata 数据
+	 * @param array $attr 属性列表
+	 * @param array $sub 子标签列表
 	 * @return string
 	 */
 	public function createTag($tag, $cdata = "", $attr = array(), $sub = array()) {
@@ -315,18 +315,6 @@ class LtXml {
 	private function _convertEntity($string) {
 		$patterns = array("/</", "/</", "/&/", "/'/", "/\"/");
 		$replacement = array("&lt;", "&gt;", "&amp;", "&apos;", "&quot;");
-
-		return preg_replace($patterns, $replacement, $string);
-	}
-
-	/**
-	 * rconvert entity
-	 * @param string $string
-	 * @return string
-	 */
-	private function _rConvertEntity($string) {
-		$patterns = array("/&lt;/", "/&gt;/", "/&amp;/", "/&apos;/", "/&quot;/");
-		$replacement = array("<", "<", "&", "'", "\"");
 
 		return preg_replace($patterns, $replacement, $string);
 	}
