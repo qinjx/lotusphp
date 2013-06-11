@@ -205,7 +205,7 @@ class LtPagination
 	 * @param string $buttonLabel 显示文字
 	 * @param int $pagenumber 当前页
 	 * @param int $pagecount 总页数
-	 * @param type $baseurl
+	 * @param string $baseurl
 	 * @return string
 	 */
 	public function renderButton($buttonLabel, $pagenumber, $pagecount, $baseurl = '?page=:page')

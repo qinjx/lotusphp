@@ -90,7 +90,7 @@ class LtSessionSqlite
 
 	/**
 	 * close
-	 * @return boolean
+	 * @return void
 	 */
 	public function close()
 	{

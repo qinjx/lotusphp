@@ -69,7 +69,7 @@ class LtCacheAdapterFile implements LtCacheAdapter
 	 * @param string $key
 	 * @param string $tableName
 	 * @param resource $connectionResource
-	 * @return type
+	 * @return boolean
 	 */
 	public function del($key, $tableName, $connectionResource)
 	{

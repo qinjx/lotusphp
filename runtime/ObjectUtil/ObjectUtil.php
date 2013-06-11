@@ -20,7 +20,7 @@ class LtObjectUtil
 	 * singleton
 	 * @param string $className
 	 * @param boolean $autoInited Whether init() method call
-	 * @return boolean|\className
+	 * @return boolean | object
 	 */
 	static public function singleton($className, $autoInited = true)
 	{

@@ -121,7 +121,7 @@ class LtStoreFile implements LtStore
 	 * key不存在 返回false
 	 * 不管有没有过期,都更新数据
 	 * @param string $key
-	 * @param string|array|obj $value
+	 * @param mixed $value
 	 * @return boolean
 	 */
 	public function update($key, $value)

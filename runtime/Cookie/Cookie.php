@@ -85,7 +85,7 @@ class LtCookie
 	 * Set cookie value to deleted with $name
 	 * 
 	 * @param string $name
-	 * @param sstring $path
+	 * @param string $path
 	 * @param string $domain
 	 */
 	public function delCookie($name, $path = '/', $domain = null)

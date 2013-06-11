@@ -161,7 +161,7 @@ abstract class LtAction
 	/**
 	 * Check if current user have privilege to do this
 	 * 
-	 * @return boolen 
+	 * @return boolean
 	 */
 	protected function checkPrivilege()
 	{

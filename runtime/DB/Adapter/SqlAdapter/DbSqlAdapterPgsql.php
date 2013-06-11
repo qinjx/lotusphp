@@ -64,7 +64,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 
 	/**
 	 * show schemas
-	 * @param type $database
+	 * @param string $database
 	 */
 	public function showSchemas($database)
 	{
