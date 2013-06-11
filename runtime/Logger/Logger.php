@@ -20,7 +20,7 @@ class LtLogger
 		"log_file" => ""
 	);
 
-	/** @var resourc file handle */
+	/** @var resource file handle */
 	private $fileHandle;
 
 	/**
@@ -61,6 +61,6 @@ class LtLogger
 			$logData = implode($this->conf["separator"], $logData);
 		}
 		$logData = $logData . PHP_EOL;
-		fwrite($this->getFileHandle(), $logData);
+		return fwrite($this->getFileHandle(), $logData);
 	}
 }
