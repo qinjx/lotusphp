@@ -28,7 +28,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * set schema
-	 * @param type $schema
+	 * @param string $schema
 	 * @return string
 	 */
 	public function setSchema($schema)
@@ -65,7 +65,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 
 	/**
 	 * show schemas
-	 * @param type $database
+	 * @param string $database
 	 * @return string
 	 */
 	public function showSchemas($database)
@@ -76,7 +76,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * show tables
-	 * @param type $schema
+	 * @param string $schema
 	 * @return string
 	 */
 	public function showTables($schema)
@@ -109,7 +109,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 
 	/**
 	 * get schemas
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getSchemas($queryResult)
 	{
@@ -118,8 +118,8 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * get tables
-	 * @param type $queryResult
-	 * @return type
+	 * @param array $queryResult
+	 * @return array
 	 */
 	public function getTables($queryResult)
 	{
