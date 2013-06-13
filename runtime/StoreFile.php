@@ -35,7 +35,7 @@ class LtStoreFile implements LtStore
     /**
      * 是否初始化过
      */
-    private $hasBeenInited = false;
+    private $hasBeenInitialized = false;
 
     /**
 	 * init
@@ -52,7 +52,7 @@ class LtStoreFile implements LtStore
         }
 		$this->storeDir = str_replace('\\', '/', $this->storeDir);
 		$this->storeDir = rtrim($this->storeDir, '\\/') . '/';
-        $this->hasBeenInited = true;
+        $this->hasBeenInitialized = true;
 	}
 
 	/**
@@ -65,13 +65,14 @@ class LtStoreFile implements LtStore
 	{
 		$file = $this->getFilePath($key);
 		$cachePath = pathinfo($file, PATHINFO_DIRNAME);
-		if (!is_dir($cachePath))
+		if (!file_exists($cachePath) || is_writable(dirname($cachePath)))
 		{
-			if (!@mkdir($cachePath, 0777, true))
-			{
-				trigger_error("Can not create $cachePath");
-			}
+            mkdir($cachePath, 0777, true);
 		}
+        else
+        {
+            trigger_error("Can not create $cachePath");
+        }
 		if (is_file($file))
 		{
 			return false;
