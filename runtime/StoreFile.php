@@ -64,18 +64,14 @@ class LtStoreFile implements LtStore
 	public function add($key, $value)
 	{
 		$file = $this->getFilePath($key);
+        if (is_file($file))
+        {
+            return false;
+        }
 		$cachePath = pathinfo($file, PATHINFO_DIRNAME);
-		if (!file_exists($cachePath) || is_writable(dirname($cachePath)))
+		if (!file_exists($cachePath))
 		{
             mkdir($cachePath, 0777, true);
-		}
-        else
-        {
-            trigger_error("Can not create $cachePath");
-        }
-		if (is_file($file))
-		{
-			return false;
 		}
 		$length = file_put_contents($file, serialize($value));
 		return $length > 0 ? true : false;
