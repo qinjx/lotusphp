@@ -28,6 +28,7 @@ class LtStoreFile implements LtStore
 
 	/**
 	 * 默认存储路径
+     * @todo 允许用户设置服务哭环境，是虚拟主机还是独立服务器。如果是虚拟主机，store dir可以在doc_root下，后缀使用php
 	 * @var string
 	 */
 	static public $defaultStoreDir = "/tmp/LtStoreFile/";
