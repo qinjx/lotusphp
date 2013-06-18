@@ -174,7 +174,8 @@ class LtDbTableDataGateway
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
 		$orderby = isset($args['orderby']) ? ' ORDER BY ' . $args['orderby'] : '';
 		$groupby = isset($args['groupby']) ? ' GROUP BY ' . $args['groupby'] : '';
-		$sql = sprintf($selectTemplate, $fields, $this->tableName, $join . $where . $groupby . $orderby);
+		$table = isset($args['table']) ? $args['table'] : $this->tableName;
+		$sql = sprintf($selectTemplate, $fields, $table, $join . $where . $groupby . $orderby);
 		if (isset($args['limit']))
 		{
 			$offset = isset($args['offset']) ? $args['offset'] : 0;
