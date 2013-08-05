@@ -45,6 +45,7 @@ class LtStoreFile implements LtStore
 	{
 		if (null == $this->storeDir)
 		{
+            self::setDefaultStoreDir();
 			$this->storeDir = self::$defaultStoreDir;
 		}
         else if (isset($_SERVER["DOCUMENT_ROOT"]) && !empty($_SERVER["DOCUMENT_ROOT"]) && false !== strpos($this->storeDir, $_SERVER["DOCUMENT_ROOT"]))
@@ -101,7 +102,7 @@ class LtStoreFile implements LtStore
 	 * 已经过期返回false
 	 * 成功返回数据,失败返回false
 	 * @param string $key
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function get($key)
 	{
@@ -137,7 +138,7 @@ class LtStoreFile implements LtStore
 	}
 
 	/**
-	 * 目录哈希
+	 * 根据key计算存储文件路径
 	 * @param string $key
 	 * @return string
 	 */
@@ -150,4 +151,19 @@ class LtStoreFile implements LtStore
 		substr($token, 2, 2) . '/' .
 		$token;
 	}
+
+    /**
+     * 设置默认存储目录
+     * @param string $dir
+     * @return boolean
+     */
+    public static function setDefaultStoreDir($dir = null)
+    {
+        if (null === $dir)
+        {
+            $dir = sys_get_temp_dir();
+        }
+        self::$defaultStoreDir = $dir;
+        return true;
+    }
 }
