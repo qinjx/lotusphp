@@ -99,7 +99,8 @@ class LtDispatcher
 				$newContext = clone $context;
 			}
 			$newContext->uri['module'] = $module;
-			$newContext->uri[strtolower($classType)] = $action;
+			//这里调用参数不对，正常应该是$newContext->uri['action']，修正
+			$newContext->uri['action'] = $action;
 			$actionInstance = new $actionClassName();
 			$actionInstance->configHandle = $this->configHandle;
 			$actionInstance->context = $newContext;
