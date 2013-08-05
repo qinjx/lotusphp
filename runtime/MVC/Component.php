@@ -100,6 +100,7 @@ abstract class LtComponent
 	{
 		switch ($this->responseType)
 		{
+			//去除这里的所有方法，因为之前已经将Component模板编译，此处如果再编译，就会造成二次编译
 			case 'json':
 			case 'tpl':
 			case 'html':
