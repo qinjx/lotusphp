@@ -141,6 +141,7 @@ class LtAutoloader
     {
         $this->persistentStoreHandle = new LtStoreFile;
         $this->persistentStoreHandle->prefix = 'Lt-parsed-token-' . $this->storeNameSpaceId;
+        $this->persistentStoreHandle->init();
     }
 
 	/**
