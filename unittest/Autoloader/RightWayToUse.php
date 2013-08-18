@@ -2,6 +2,7 @@
 /**
  * 本测试文档演示了LtAutoloader的正确使用方法 
  * 按本文档操作一定会得到正确的结果
+ * @todo 增加测试用例：不会干扰其它通过spl加载的autoloader
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 class RightWayToUseAutoloader extends PHPUnit_Framework_TestCase
