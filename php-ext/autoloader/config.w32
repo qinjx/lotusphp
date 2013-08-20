@@ -1,0 +1,13 @@
+// $Id$
+// vim:ft=javascript
+
+// If your extension references something external, use ARG_WITH
+// ARG_WITH("autoloader", "for autoloader support", "no");
+
+// Otherwise, use ARG_ENABLE
+// ARG_ENABLE("autoloader", "enable autoloader support", "no");
+
+if (PHP_AUTOLOADER != "no") {
+	EXTENSION("autoloader", "autoloader.c");
+}
+

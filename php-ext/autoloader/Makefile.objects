@@ -1,0 +1,8 @@
+autoloader.lo: /opt/src/php-5.4.17/ext/autoloader/autoloader.c
+	$(LIBTOOL) --mode=compile $(CC)  -I. -I/opt/src/php-5.4.17/ext/autoloader $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /opt/src/php-5.4.17/ext/autoloader/autoloader.c -o autoloader.lo 
+$(phplibdir)/autoloader.la: ./autoloader.la
+	$(LIBTOOL) --mode=install cp ./autoloader.la $(phplibdir)
+
+./autoloader.la: $(shared_objects_autoloader) $(AUTOLOADER_SHARED_DEPENDENCIES)
+	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_autoloader) $(AUTOLOADER_SHARED_LIBADD)
+
