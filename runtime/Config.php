@@ -19,11 +19,6 @@ class LtConfig
 	 * @var LtStore
 	 */
 	public $storeHandle;
-	/**
-	 * 配置信息
-	 * @var array
-	 */
-	protected $conf;
 
 	/**
 	 * construct
