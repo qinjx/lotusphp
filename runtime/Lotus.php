@@ -164,6 +164,9 @@ class Lotus
 
 	/**
 	 * prepare config
+     * @todo 先加载proj/conf下的配置，再加载app/conf下的配置，并自动覆盖重复项
+     * 注意避开array_merge的坑
+     * 或者，至少做个判断，app/conf不存在，去找proj/conf，不能不加载配置文件
 	 */
 	protected function prepareConfig()
 	{
