@@ -166,7 +166,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 			*/
 			$fields[$value['name']]['notnull'] = (bool) ($value['notnull'] != 0);
 			$fields[$value['name']]['default'] = $value['dflt_value'];
-			$fields[$value['name']]['primary'] = (bool) ($value['pk'] == 1 && strtoupper($fulltype) == 'INTEGER');
+			$fields[$value['name']]['primary'] = (bool) ($value['pk'] == 1 && strtoupper(substr($fulltype, 0, 7)) == 'INTEGER');
 		}
 		return $fields;
 	}
