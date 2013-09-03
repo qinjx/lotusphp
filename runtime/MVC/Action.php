@@ -143,8 +143,9 @@ abstract class LtAction
 				{
 					if ($ruleValue instanceof LtConfigExpression)
 					{
+                        $_ruleValue = NULL;
 						eval('$_ruleValue = ' . $ruleValue->__toString());
-						$dtd->rules[$ruleKey] = $_ruleValue;
+                        $dtd->rules[$ruleKey] = $_ruleValue;
 					}
 				}
 				$error_messages = $validator->validate($this->context->$from($variable), $dtd);
@@ -223,9 +224,11 @@ abstract class LtAction
 				$this->view->compiledDir = $this->viewTplDir;
 				$this->view->autoCompile = $this->viewTplAutoCompile;
 				if (empty($this->template))
-				{/*
+				{
+				 /*
 				  * 兼容end-user手工输入的大小写不区分的module和action名字
 				  * 如module=User&action=Login, module=user&action=login都会对应到user-login这个view template
+				  * @todo 允许用户定义module和action之间的分隔符，以支持view/$module/$action.php
 				  */
 					$this->template = strtolower($this->context->uri["module"]) . "-" . strtolower($this->context->uri["action"]);
 				}
