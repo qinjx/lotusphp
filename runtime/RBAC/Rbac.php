@@ -93,22 +93,4 @@ class LtRbac {
 		}
 		return $allow;
 	}
-/*
-	private function __set($p,$v)
-	{
-		$this->$p = $v;
-	}
-
-	private function __get($p)
-	{
-		if(isset($this->$p))
-		{
-			return($this->$p);
-		}
-		else
-		{
-			return(NULL);
-		}
-	}
-*/
 }
