@@ -112,6 +112,7 @@ abstract class LtAction
 			$this->message = "Invalid input";
 			$this->data['error_messages'] = $validateResult["error_messages"];
 		}
+        $this->beforeWriteResponse();
 		$this->writeResponse();
 	}
 
@@ -126,7 +127,8 @@ abstract class LtAction
 	/**
 	 * Validate the data from client
 	 * 
-	 * @return array 
+	 * @return array
+     * @todo 从config中取dtd配置
 	 */
 	protected function validateInput()
 	{
@@ -192,6 +194,13 @@ abstract class LtAction
 	protected function execute()
 	{
 	}
+
+    /**
+     * before write response
+     */
+    protected function beforeWriteResponse()
+    {
+    }
 
 	/**
 	 * write response
