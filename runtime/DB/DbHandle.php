@@ -186,6 +186,10 @@ class LtDbHandle
 			{
 				$replacement[] = $value->__toString();
 			}
+            else if (is_null($value))
+            {
+                $replacement[] = 'NULL';
+            }
 			else if (is_string($value))
 			{
 				$replacement[] = "'" . $this->connectionAdapter->escape($value, $this->connectionResource) . "'";
