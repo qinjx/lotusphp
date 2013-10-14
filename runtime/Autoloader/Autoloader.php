@@ -399,13 +399,14 @@ class LtAutoloader
         {//init()会调用这个方法, 不要将这个判断移动到scanDir()中
             return false;
         }
+        $sourceContent = file_get_contents($filePath);
         $fileSize = filesize($filePath);
-        $fileChecksum = crc32($filePath);
+        $fileChecksum = crc32($sourceContent);
 
         $savedFileInfo = $this->persistentStoreHandle->get($filePath);
 		if (!isset($savedFileInfo['file_size']) || $savedFileInfo['file_size'] != $fileSize || $savedFileInfo['file_checksum'] != $fileChecksum)
 		{
-            if($libNames = $this->parseLibNames(file_get_contents($filePath)))
+            if($libNames = $this->parseLibNames($sourceContent))
             {
                 $newFileInfo = array('file_size' => $fileSize, 'file_checksum' => $fileChecksum, 'lib_names' => $libNames);
                 if (isset($savedFileInfo['file_size']))
