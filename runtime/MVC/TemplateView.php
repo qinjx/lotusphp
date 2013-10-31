@@ -90,9 +90,9 @@ class LtTemplateView
 	 */
 	public function template($islayout = false)
 	{
-		$this->layoutDir = rtrim($this->layoutDir, '\\/') . '/';
-		$this->compiledDir = rtrim($this->compiledDir, '\\/') . '/';
-		$this->templateDir = rtrim($this->templateDir, '\\/') . '/';
+		$this->layoutDir = rtrim($this->layoutDir, '\\/') . DIRECTORY_SEPARATOR ;
+		$this->compiledDir = rtrim($this->compiledDir, '\\/') . DIRECTORY_SEPARATOR;
+		$this->templateDir = rtrim($this->templateDir, '\\/') . DIRECTORY_SEPARATOR;
 		$iscompile = true;
 
 		if ($islayout)
