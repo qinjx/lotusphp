@@ -19,6 +19,7 @@ class LtPagination
 	
 	/** @var array config */
 	public $conf;
+	public $confGroup;
 
 	/**
 	 * construct
@@ -43,44 +44,57 @@ class LtPagination
 	 */
 	public function init()
 	{
-		$this->conf = $this->configHandle->get("pagination.pager");
-		if (empty($this->conf))
+		$this->confGroup = $this->configHandle->get("pagination.pager");
+		if (empty($this->confGroup['default']))
 		{
-			$this->conf['per_page'] = 25; //每个页面中希望展示的项目数量 
-			$this->conf['num_links_show'] = 9; //数字链接显示数量 
-			$this->conf['num_point_start_end'] = 2; //“点”前边和后边的链接数量
-			$this->conf['show_first'] = true;
-			$this->conf['show_prev'] = true;
-			$this->conf['show_next'] = true;
-			$this->conf['show_last'] = true;
-			$this->conf['show_goto'] = false;
-			$this->conf['show_info'] = false;
-			$this->conf['show_point'] = true;
-			$this->conf['show_empty_button'] = false;
+			$this->confGroup['default']['per_page'] = 25; //每个页面中希望展示的项目数量 
+			$this->confGroup['default']['num_links_show'] = 9; //数字链接显示数量 
+			$this->confGroup['default']['num_point_start_end'] = 2; //“点”前边和后边的链接数量
+			$this->confGroup['default']['show_first'] = true;
+			$this->confGroup['default']['show_prev'] = true;
+			$this->confGroup['default']['show_next'] = true;
+			$this->confGroup['default']['show_last'] = true;
+			$this->confGroup['default']['show_goto'] = false;
+			$this->confGroup['default']['show_info'] = false;
+			$this->confGroup['default']['show_point'] = true;
+			$this->confGroup['default']['show_empty_button'] = false;
 
-			$this->conf['first_text'] = 'First';
-			$this->conf['prev_text'] = 'Prev';
-			$this->conf['next_text'] = 'Next';
-			$this->conf['last_text'] = 'Last';
-			$this->conf['point_text'] = '...';
+			$this->confGroup['default']['first_text'] = 'First';
+			$this->confGroup['default']['prev_text'] = 'Prev';
+			$this->confGroup['default']['next_text'] = 'Next';
+			$this->confGroup['default']['last_text'] = 'Last';
+			$this->confGroup['default']['point_text'] = '...';
 
-			$this->conf['full_tag_open'] = '<div class="pages">';
-			$this->conf['full_tag_close'] = '</div>';
-			$this->conf['num_tag_open'] = '';
-			$this->conf['num_tag_close'] = '';
-			$this->conf['link_tag_open'] = '<a href=":url">';
-			$this->conf['link_tag_close'] = '</a>';
-			$this->conf['link_tag_cur_open'] = '<strong>';
-			$this->conf['link_tag_cur_close'] = '</strong>';
-			$this->conf['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
-			$this->conf['button_tag_close'] = '</a>';
-			$this->conf['button_tag_empty_open'] = '<span>';
-			$this->conf['button_tag_empty_close'] = '</span>';
-			$this->conf['point_tag_open'] = '<span>';
-			$this->conf['point_tag_close'] = '</span>';
+			$this->confGroup['default']['full_tag_open'] = '<div class="pages">';
+			$this->confGroup['default']['full_tag_close'] = '</div>';
+			$this->confGroup['default']['num_tag_open'] = '';
+			$this->confGroup['default']['num_tag_close'] = '';
+			$this->confGroup['default']['link_tag_open'] = '<a href=":url">';
+			$this->confGroup['default']['link_tag_close'] = '</a>';
+			$this->confGroup['default']['link_tag_cur_open'] = '<strong>';
+			$this->confGroup['default']['link_tag_cur_close'] = '</strong>';
+			$this->confGroup['default']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
+			$this->confGroup['default']['button_tag_close'] = '</a>';
+			$this->confGroup['default']['button_tag_empty_open'] = '<span>';
+			$this->confGroup['default']['button_tag_empty_close'] = '</span>';
+			$this->confGroup['default']['point_tag_open'] = '<span>';
+			$this->confGroup['default']['point_tag_close'] = '</span>';
+			
+			$this->conf = $this->confGroup['default'];
+		}
+		else
+		{
+			$this->conf = $this->confGroup['default'];
 		}
 	}
-
+	/**
+	 * 切换分页样式
+	 * @param string $pagername 确保分页样式定义存在，不存在将调用默认样式输出分页
+	 */
+	public function setPager($pagername)
+	{
+		$this->confGroup[$pagername]? $this->conf = $this->confGroup[$pagername] : $this->conf = $this->confGroup['default'];
+	}
 	/**
 	 * 输出html格式分布代码
 	 * @param int $page 当前页
@@ -260,3 +274,4 @@ class LtPagination
 		return $button;
 	}
 }
+
