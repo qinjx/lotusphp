@@ -20,6 +20,9 @@ class LtCookie
 	/** @var string secret key */
 	private $secretKey;
 
+    /** @var boolean encrypt flag */
+    private $enableEncrypt = true;
+
 	/**
 	 * construct
 	 */
@@ -42,12 +45,16 @@ class LtCookie
 	 * init
 	 */
 	public function init()
-	{ 
-		$this->secretKey = $this->configHandle->get("cookie.secret_key");
-		if(empty($this->secretKey))
-		{
-			trigger_error("cookie.secret_key empty");
-		}
+	{
+        if (false == $this->configHandle->get("cookie.enable_encrypt")) {
+            $this->enableEncrypt = false;
+        } else {
+            if (empty($this->secretKey))
+            {
+                trigger_error("cookie.secret_key empty");
+            }
+            $this->secretKey = $this->configHandle->get("cookie.secret_key");
+        }
 	}
 
 	/**
@@ -58,12 +65,17 @@ class LtCookie
 	 */
 	protected function decrypt($encryptedText)
 	{
-		$key = $this->secretKey;
-		$cryptText = base64_decode($encryptedText);
-		$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-		$iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-		$decryptText = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $cryptText, MCRYPT_MODE_ECB, $iv);
-		return trim($decryptText);
+        if ($this->enableEncrypt) {
+            $key = $this->secretKey;
+            $cryptText = base64_decode($encryptedText);
+            $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+            $decryptText = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $cryptText, MCRYPT_MODE_ECB, $iv);
+            return trim($decryptText);
+        } else {
+            return $encryptedText;
+        }
+
 	}
 
 	/**
@@ -74,11 +86,15 @@ class LtCookie
 	 */
 	protected function encrypt($plainText)
 	{
-		$key = $this->secretKey;
-		$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-		$iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-		$encryptText = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $plainText, MCRYPT_MODE_ECB, $iv);
-		return trim(base64_encode($encryptText));
+        if ($this->enableEncrypt) {
+            $key = $this->secretKey;
+            $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+            $encryptText = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $plainText, MCRYPT_MODE_ECB, $iv);
+            return trim(base64_encode($encryptText));
+        } else {
+            return $plainText;
+        }
 	}
 
 	/**
