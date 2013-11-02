@@ -108,9 +108,9 @@ class LtUrl
 	 */
 	public function generate($module, $action, $args = array(), $baseUrl = null, $protocol = null)
 	{
-		if ($baseUrl)
+		if (null === $baseUrl)
 		{
-			$this->baseUrl = $baseUrl;
+            $baseUrl = $this->baseUrl;
 		}
 		$protocol = $protocol ? strtoupper($protocol) : $this->protocol;
 		switch ($protocol)
@@ -144,7 +144,7 @@ class LtUrl
 				$this->postfix = $old_postfix;
 				break;
 		}
-		return $this->baseUrl . $url;
+		return $baseUrl . $url;
 	}
 
 	/**
