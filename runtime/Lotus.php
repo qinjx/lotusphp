@@ -81,7 +81,7 @@ class Lotus
 			if (isset($this->option["app_name"]) && !empty($this->option["app_name"]))
 			{
 				$this->app_dir = $this->proj_dir . "app/" . $this->option["app_name"] . "/";
-				$this->cache_dir = $this->proj_dir . "cache/";
+				$this->cache_dir = sys_get_temp_dir() . "/cache/";
 				$underMVC = true;
 			}
 			else
