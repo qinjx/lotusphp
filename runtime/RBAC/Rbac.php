@@ -62,7 +62,7 @@ class LtRbac {
 			foreach($roles as $role) 
 			{
 				if (isset($this->acl[$operation][$role]))
-				{print_r($this->acl);
+				{
 					// everyone *
 					if (isset($this->acl[$operation]['*']) && in_array($resource, $this->acl[$operation]['*']))
 					{
