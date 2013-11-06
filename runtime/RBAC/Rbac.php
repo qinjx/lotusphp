@@ -11,6 +11,7 @@
  * @author Yi Zhao <zhao5908@gmail.com>
  * @category runtime
  * @package   Lotusphp\RBAC
+ * @todo init()时转换数组，checkAcl()时使用isset()代替in_array()提升性能
  */
 class LtRbac {
 
@@ -60,10 +61,10 @@ class LtRbac {
 		{
 			foreach($roles as $role) 
 			{
-				if (isset($this->acl[$operation][$role])) 
-				{
+				if (isset($this->acl[$operation][$role]))
+				{print_r($this->acl);
 					// everyone *
-					if (in_array($resource, $this->acl[$operation]['*'])) 
+					if (isset($this->acl[$operation]['*']) && in_array($resource, $this->acl[$operation]['*']))
 					{
 						$allow = "allow" == $operation ? true : false;
 						break;
