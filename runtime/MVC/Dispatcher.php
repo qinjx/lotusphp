@@ -130,7 +130,7 @@ class LtDispatcher
 			}
 		}
 		// 必需大于 512 bytes，否则404在某些浏览器中不显示
-		echo '<!DOCTYPE html ><html><head><title>Error 404</title></head><body>404 Not Found
+		echo '<!DOCTYPE html ><html><head><title>Error 404</title></head><body>Action Class Not Found
                                                                                                     
                                                                                                     
                                                                                                     
