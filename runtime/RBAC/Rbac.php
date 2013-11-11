@@ -68,7 +68,8 @@ class LtRbac {
 					{
 						$allow = "allow" == $operation ? true : false;
 						break;
-					} 
+					}
+
 					if (in_array($resource, $this->acl[$operation][$role])) 
 					{
 						$allow = "allow" == $operation ? true : false;
@@ -76,9 +77,13 @@ class LtRbac {
 					}
 					else 
 					{
-						$res = explode('/', trim($resource, '/'));
-						for ($i = count($res)-1; $i >= 0; $i--) 
+                        /**
+                         * to check if [module / *] or [* / action] is allowed
+                         */
+                        $tmpArray = explode('/', trim($resource, '/'));
+                        for ($i = 2; $i >= 0; $i--)
 						{
+                            $res = $tmpArray;
 							$res[$i] = '*';
 							$tmp = implode('/', $res);
 							if (in_array($tmp, $this->acl[$operation][$role])) 
