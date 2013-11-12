@@ -21,7 +21,7 @@ class LtCookie
 	private $secretKey;
 
     /** @var boolean encrypt flag */
-    private $enableEncrypt = true;
+    private $disableEncrypt = false;
 
 	/**
 	 * construct
@@ -46,15 +46,15 @@ class LtCookie
 	 */
 	public function init()
 	{
-        if (false == $this->configHandle->get("cookie.enable_encrypt")) {
-            $this->enableEncrypt = false;
-        } else {
-            if (empty($this->secretKey))
-            {
-                trigger_error("cookie.secret_key empty");
-            }
-            $this->secretKey = $this->configHandle->get("cookie.secret_key");
-        }
+		if (true == $this->configHandle->get("cookie.disable_encrypt")) {
+			$this->disableEncrypt = true;
+		} else {
+			if (empty($this->secretKey))
+			{
+				trigger_error("cookie.secret_key empty");
+			}
+			$this->secretKey = $this->configHandle->get("cookie.secret_key");
+		}
 	}
 
 	/**
@@ -65,7 +65,7 @@ class LtCookie
 	 */
 	protected function decrypt($encryptedText)
 	{
-        if ($this->enableEncrypt) {
+        if (false == $this->disableEncrypt) {
             $key = $this->secretKey;
             $cryptText = base64_decode($encryptedText);
             $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
@@ -86,7 +86,7 @@ class LtCookie
 	 */
 	protected function encrypt($plainText)
 	{
-        if ($this->enableEncrypt) {
+        if (false == $this->disableEncrypt) {
             $key = $this->secretKey;
             $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
             $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
