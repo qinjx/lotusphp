@@ -49,11 +49,11 @@ class LtCookie
 		if (true == $this->configHandle->get("cookie.disable_encrypt")) {
 			$this->disableEncrypt = true;
 		} else {
+			$this->secretKey = $this->configHandle->get("cookie.secret_key");
 			if (empty($this->secretKey))
 			{
 				trigger_error("cookie.secret_key empty");
 			}
-			$this->secretKey = $this->configHandle->get("cookie.secret_key");
 		}
 	}
 
