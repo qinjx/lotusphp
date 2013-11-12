@@ -78,20 +78,16 @@ class LtRbac {
 					else 
 					{
                         /**
-                         * to check if [module / *] or [* / action] is allowed
+                         * to check if [module / *] or [* / action] or [* / *] is allowed
                          */
                         $tmpArray = explode('/', trim($resource, '/'));
-                        for ($i = 2; $i >= 0; $i--)
+                        foreach (array($tmpArray[0] . "/*", "*/" . $tmpArray[1], "*/*") as $tmp)
 						{
-                            $res = $tmpArray;
-							$res[$i] = '*';
-							$tmp = implode('/', $res);
 							if (in_array($tmp, $this->acl[$operation][$role])) 
 							{
 								$allow = "allow" == $operation ? true : false;
 								break;
 							}
-							unset($res[$i]);
 						}
 					}
 				}
