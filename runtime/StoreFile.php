@@ -102,14 +102,14 @@ class LtStoreFile implements LtStore
 	 * 已经过期返回false
 	 * 成功返回数据,失败返回false
 	 * @param string $key
-	 * @return boolean
+	 * @return mixed | null
 	 */
 	public function get($key)
 	{
 		$file = $this->getFilePath($key);
 		if (!is_file($file))
 		{
-			return false;
+			return null;
 		}
 		$str = file_get_contents($file);
 		$value = unserialize($str);

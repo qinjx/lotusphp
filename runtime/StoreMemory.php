@@ -68,11 +68,11 @@ class LtStoreMemory implements LtStore
 	/**
 	 * get
 	 * @param string $key
-	 * @return string|array|object
+	 * @return mixed | null
 	 */
 	public function get($key)
 	{
-		return isset($this->stack[$key]) ? $this->stack[$key] : false;
+		return isset($this->stack[$key]) ? $this->stack[$key] : null;
 	}
 
 	/**
