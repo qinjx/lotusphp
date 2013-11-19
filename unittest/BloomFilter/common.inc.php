@@ -16,8 +16,8 @@ class LtBloomFilterProxy extends LtBloomFilter
 		}
 	}
 
-	public function hash($str, $bucketSize, $magicNumIndex)
+	public function hash($str, $bucketSize, $magicNum)
 	{
-		return parent::hash($str, $bucketSize, $magicNumIndex);
+		return parent::hash($str, $bucketSize, $magicNum);
 	}
 }
