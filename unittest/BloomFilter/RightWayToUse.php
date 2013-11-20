@@ -9,8 +9,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 	/**
 	 * -------------------------------------------------------------------
 	 * 本测试用例期望效果：
-	 * 在new CLASS_NAME, class_exists("CLASS_NAME"), extends CLASS_NAME的时候 
-	 * 自动把包含该类的文件加载进来
+	 * 调用add()方法加入bit array后，调用has()方法能返回true
 	 */
 	public function testMostUsedWay()
 	{
@@ -21,7 +20,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 		$bf = new LtBloomFilter;
 
 		// 2. 设置属性
-		$bf->setBucketSize(64 * 1024);
+		$bf->setBucketSize(10000);
 		$bf->setImageFile(sys_get_temp_dir() . "/bf-test-" . crc32(__FILE__) . ".bloom");
 
 		// 3. 调init()方法

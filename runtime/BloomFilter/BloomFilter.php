@@ -4,26 +4,45 @@
  * @todo 使用integer array模拟一个bit array，减少内存占用
  */
 class LtBloomFilter {
-	protected $bitArray;
-	protected $bitArrayMaxLength = 1048576;//1048576 = 1024 * 1024 = 1 Mega
+	protected $bucketSize;
+	protected $errorRate = 0.000001;
 	protected $imageFile;
-	protected $syncCounter = 0;
 	protected $syncThreshHold = 1;
 
-	protected $magicNumbers = array(11,13,17,19,23,29,31,37,41,43,47,53,59,61);
+	protected $bitArray;
+	protected $bitArrayMaxLength;
+	protected $syncCounter = 0;
+	protected $magicNumbers = array(
+		2,3,5,7,11,13,17,19,23,29,
+		31,37,41,43,47,53,59,61,67,71,
+		73,79,83,89,97,101,103,107,109,113
+	);
+	protected $hashFunAmountToUse;
 
 	/**
-	 * 设置待存储的元素数量
-	 * @param integer $num，如要存储1亿个URL，就传1亿
+	 * 设置待存储的元素数量上限
+	 * @param integer $size，如要计划存储1亿个URL，就传1亿
 	 * @return void
-	 *
-	 * BitArray长度是待存储元素的20倍，以降低误判率
 	 */
-	public function setBucketSize($num) {
-		if (is_int($num) && 0 < $num) {
-			$this->bitArrayMaxLength = bcmul("20", $num);
+	public function setBucketSize($size) {
+		if (is_int($size) && 0 < $size) {
+			$this->bucketSize = $size;
 		} else {
 			trigger_error("Bucket Size must be integer, and greater than 0", E_USER_ERROR);
+		}
+	}
+
+	/**
+	 * 设置误判率上限
+	 * @param float $rate
+	 * 最小值：1.0E10-6，即十亿分之一，十亿条数据中仅一条误判
+	 */
+	public function setErrorRate($rate) {
+		$minErrorRate = 0.000001;
+		if (is_float($rate) && $minErrorRate <= $rate && $rate < 1) {
+			$this->errorRate = $rate;
+		} else {
+			trigger_error("Bucket Size must be float number between $minErrorRate and 1.0", E_USER_ERROR);
 		}
 	}
 
@@ -69,9 +88,18 @@ class LtBloomFilter {
 	/**
 	 * 初始化方法，每个Lotusphp组件都有的标准方法
 	 *
-	 * 若image file存在，且有上次持久化的内容，读取之
+	 * m,n,p,k计算关系参见：http://en.wikipedia.org/wiki/Bloom_filter#Probability_of_false_positives
 	 */
 	public function init() {
+		//根据n, p算m
+		$this->bitArrayMaxLength = bcmul("-1",
+			bcmul((string) $this->bucketSize, (string) log($this->errorRate) / pow(log(2), 2))
+		);
+
+		//根据m,n算k
+		$this->hashFunAmountToUse = ceil((float) bcdiv($this->bitArrayMaxLength, $this->bucketSize) * log(2));
+
+		//若image file存在，且有上次持久化的内容，读取之
 		if (!$this->imageFile) {
 			$this->setImageFile(sys_get_temp_dir() . DIRECTORY_SEPARATOR . crc32(__FILE__) . ".bloom");
 		} else if (0 < filesize($this->imageFile)) {
@@ -84,9 +112,8 @@ class LtBloomFilter {
 	 * @param string $str 要加入的字串
 	 */
 	public function add($str) {
-		$magicNumTotal = count($this->magicNumbers);
 		$bitArrayChanged = false;
-		for ($i = 0; $i < $magicNumTotal; $i++) {
+		for ($i = 0; $i < $this->hashFunAmountToUse; $i++) {
 			$hash = $this->hash($str, $this->bitArrayMaxLength, $this->magicNumbers[$i]);
 			if (!isset($this->bitArray[$hash])) {
 				$this->bitArray[$hash] = 1;
@@ -107,12 +134,9 @@ class LtBloomFilter {
 	 * @return bool
 	 * has()方法返回false，说明一定不存在
 	 * 而返回true，则表示存在（有极小可能误判）之所以不是【一定存在】，是因为bloom filter算法自身允许一定的false positive
-	 * 本程序使用了合理的参数，误判概率大约在0.007% 至 0.03%
-	 * false positive rate参见：http://en.wikipedia.org/wiki/Bloom_filter
 	 */
 	public function has($str) {
-		$magicNumTotal = count($this->magicNumbers);
-		for ($i = 0; $i < $magicNumTotal; $i++) {
+		for ($i = 0; $i < $this->hashFunAmountToUse; $i++) {
 			$hash = $this->hash($str, $this->bitArrayMaxLength, $this->magicNumbers[$i]);
 			if (!isset($this->bitArray[$hash])) {
 				return false;
@@ -139,7 +163,6 @@ class LtBloomFilter {
 				bcmul((string) $magicNum, $hash)
 			);
 		}
-
 		return bcmod($hash, (string) $bucketSize);
 	}
 
