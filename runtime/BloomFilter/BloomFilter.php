@@ -106,7 +106,8 @@ class LtBloomFilter {
 	 * @param string $str
 	 * @return bool
 	 * has()方法返回false，说明一定不存在
-	 * 而返回true，则是很有可能不存在，之所以不是【一定存在】，是因为bloom filter算法自身允许一定的false positive
+	 * 而返回true，则表示存在（有极小可能误判）之所以不是【一定存在】，是因为bloom filter算法自身允许一定的false positive
+	 * 本程序使用了合理的参数，误判概率大约在0.007% 至 0.03%
 	 * false positive rate参见：http://en.wikipedia.org/wiki/Bloom_filter
 	 */
 	public function has($str) {
