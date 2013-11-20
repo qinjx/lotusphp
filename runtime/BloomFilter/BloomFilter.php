@@ -1,4 +1,8 @@
 <?php
+/**
+ * Class LtBloomFilter
+ * @todo 使用integer array模拟一个bit array，减少内存占用
+ */
 class LtBloomFilter {
 	protected $bitArray;
 	protected $bitArrayMaxLength = 1048576;//1048576 = 1024 * 1024 = 1 Mega
