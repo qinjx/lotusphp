@@ -35,38 +35,6 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 		$this->assertFalse($bf->has("http://example.com/"));
 	}
 
-	/**
-	 * 本用例展示了LtAutoloader能识别哪些类和函数定义 
-	 * 
-	 * 添加新的测试条请增加一个数组 
-	 * array('定义类或函数的代码','正确结果')
-	 */
-	public function hashDataProvider()
-	{
-		return array(
-			// 最常用的Class写法
-			array("<?php
-				class Src
-				{
-					public function parseSrc()//this function should not be parsed
-					{
-					}
-				}",
-				123
-			),
-			);
-	}
-
-	/**
-	 * 测试hash()能否正确的识别源文件中定义的类,接口,函数
-	 * 
-	 * @dataProvider hashDataProvider
-	 */
-	public function testHash($src, $expected)
-	{
-		$ap = new LtBloomFilterProxy();
-	}
-
 	protected function setUp()
 	{
 	}

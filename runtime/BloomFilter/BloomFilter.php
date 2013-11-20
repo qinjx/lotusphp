@@ -66,6 +66,11 @@ class LtBloomFilter {
 		}
 	}
 
+	/**
+	 * 初始化方法，每个Lotusphp组件都有的标准方法
+	 *
+	 * 若image file存在，且有上次持久化的内容，读取之
+	 */
 	public function init() {
 		if (!$this->imageFile) {
 			$this->setImageFile(sys_get_temp_dir() . DIRECTORY_SEPARATOR . crc32(__FILE__) . ".bloom");
@@ -74,6 +79,10 @@ class LtBloomFilter {
 		}
 	}
 
+	/**
+	 * 加入字串
+	 * @param string $str 要加入的字串
+	 */
 	public function add($str) {
 		$magicNumTotal = count($this->magicNumbers);
 		$bitArrayChanged = false;
@@ -93,6 +102,7 @@ class LtBloomFilter {
 	}
 
 	/**
+	 * 判断某字串是否存在
 	 * @param string $str
 	 * @return bool
 	 * has()方法返回false，说明一定不存在
