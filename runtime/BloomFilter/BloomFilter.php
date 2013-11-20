@@ -35,10 +35,10 @@ class LtBloomFilter {
 	/**
 	 * 设置误判率上限
 	 * @param float $rate
-	 * 最小值：1.0E10-6，即十亿分之一，十亿条数据中仅一条误判
+	 * 最小值：1.0E10-9，即十亿分之一，十亿条数据中仅一条误判
 	 */
 	public function setErrorRate($rate) {
-		$minErrorRate = 0.000001;
+		$minErrorRate = 0.000000001;
 		if (is_float($rate) && $minErrorRate <= $rate && $rate < 1) {
 			$this->errorRate = $rate;
 		} else {
