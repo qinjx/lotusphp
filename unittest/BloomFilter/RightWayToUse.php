@@ -22,6 +22,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 
 		// 2. 设置属性
 		$bf->setBucketSize(64 * 1024);
+		$bf->setImageFile(sys_get_temp_dir() . "/bf-test-" . crc32(__FILE__) . ".bloom");
 
 		// 3. 调init()方法
 		$bf->init();
