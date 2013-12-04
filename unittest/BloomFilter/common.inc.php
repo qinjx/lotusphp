@@ -8,6 +8,7 @@ require_once $lotusHome . "runtime/BloomFilter/BloomFilter.php";
  */
 class LtBloomFilterProxy extends LtBloomFilter
 {
+    public $bitArray;
 	public function __get($prop)
 	{
 		if (isset($this->$prop))
@@ -16,8 +17,23 @@ class LtBloomFilterProxy extends LtBloomFilter
 		}
 	}
 
+    public function __set($prop, $val)
+    {
+        $this->$prop = $val;
+    }
+
 	public function hash($str, $bucketSize, $magicNum)
 	{
 		return parent::hash($str, $bucketSize, $magicNum);
 	}
+
+    public function saveToDisk()
+    {
+        parent::saveToDisk();
+    }
+
+    public function loadFromDisk()
+    {
+        parent::loadFromDisk();
+    }
 }

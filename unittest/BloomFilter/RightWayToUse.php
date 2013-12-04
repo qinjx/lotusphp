@@ -2,6 +2,8 @@
 /**
  * 本测试文档演示了LtBloomFilter的正确使用方法
  * 按本文档操作一定会得到正确的结果
+ *
+ *
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
@@ -33,6 +35,23 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 		$this->assertTrue($bf->has("本用例展示了LtAutoloader能识别哪些类和函数定义"));
 		$this->assertFalse($bf->has("http://example.com/"));
 	}
+
+    public function testBitArraySaveAndLoad()
+    {
+        $file = sys_get_temp_dir() . "/" . uniqid() . ".bloom";
+        $bitArr = array_fill(0, rand(100, 999), rand(0, 1));
+        $bfp = new LtBloomFilterProxy();
+        $bfp->setImageFile($file);
+        $bfp->bitArray = $bitArr;
+
+        $bfp->saveToDisk();
+        $bfp->bitArray = null;
+
+        $bfp->loadFromDisk();
+
+        $this->assertEquals($bitArr, $bfp->bitArray);
+        unlink($file);
+    }
 
 	protected function setUp()
 	{
