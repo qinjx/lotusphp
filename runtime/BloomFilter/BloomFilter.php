@@ -9,7 +9,8 @@ class LtBloomFilter {
 	protected $imageFile;
 	protected $syncThreshHold = 1;
 
-	protected $bitArray;
+	protected $bitArray = array();
+    protected $bitArrayChanged = array();
 	protected $bitArrayMaxLength;
 	protected $syncCounter = 0;
 	protected $magicNumbers = array(
@@ -107,7 +108,7 @@ class LtBloomFilter {
 			if (!$this->imageFile) {
 				$this->setImageFile(sys_get_temp_dir() . DIRECTORY_SEPARATOR . crc32(__FILE__) . ".bloom");
 			} else if (0 < filesize($this->imageFile)) {//若image file存在，且有上次持久化的内容，读取之
-				$this->loadFromDisk();
+				$this->loadFromDisk($this->imageFile);
 			}
 			$this->hasBeenInitialized = true;
 		} else {
@@ -123,19 +124,19 @@ class LtBloomFilter {
 	public function add($str) {
 		if ($this->hasBeenInitialized) {
 			if (is_string($str)) {
-				$bitArrayChanged = false;
 				for ($i = 0; $i < $this->hashFunAmountToUse; $i++) {
 					$hash = $this->hash($str, $this->bitArrayMaxLength, $this->magicNumbers[$i]);
 					if (!isset($this->bitArray[$hash])) {
 						$this->bitArray[$hash] = 1;
-						$bitArrayChanged = true;
+						$this->bitArrayChanged[] = $hash;
 					}
 				}
-				if ($bitArrayChanged) {
+				if (count($this->bitArrayChanged)) {
 					$this->syncCounter ++;
 					if ($this->syncCounter >= $this->syncThreshHold) {
-						$this->saveToDisk();
+						$this->saveToDisk($this->bitArrayChanged, $this->imageFile);
 						$this->syncCounter = 0;
+                        $this->bitArrayChanged = array();
 					}
 				}
 				return true;
@@ -192,11 +193,40 @@ class LtBloomFilter {
 	/*
 	 * 数组持久化
 	 */
-	protected function saveToDisk() {
-		file_put_contents($this->imageFile, serialize($this->bitArray));
+	protected function saveToDisk($arr, $file) {
+        $fh = fopen($file, "w");
+        foreach($arr as $k => $v) {
+            fseek($fh, 0, SEEK_END);
+            $fileSize = ftell($fh);
+            $insertPos = $k * PHP_INT_SIZE;
+            if ($insertPos > $fileSize) {//此key之前没有持久化过，插入之，并补齐其和此前最后一个元素间的空隙
+                $emptyToFill = $k - $fileSize / PHP_INT_SIZE;
+                for ($i = 0; $i < $emptyToFill; $i ++) {
+                    fwrite($fh, pack("d", 0));
+                }
+            }
+            fseek($fh, $insertPos);
+            fwrite($fh, pack("d", $arr[$k]));
+        }
+        fclose($fh);
+
 	}
 
-	protected function loadFromDisk() {
-		$this->bitArray = unserialize(file_get_contents($this->imageFile));
+	protected function loadFromDisk($file) {
+        $fh = fopen($file, "r");
+        fseek($fh, 0, SEEK_END);
+        $fileSize = ftell($fh);
+        $arrLen = $fileSize / PHP_INT_SIZE;
+        $bitArray = array();
+        for ($i = 0; $i < $arrLen; $i ++) {
+            fseek($fh, $i * PHP_INT_SIZE);
+            $unpackedArray = unpack("d", fread($fh, PHP_INT_SIZE));
+            $num = $unpackedArray[1];
+            if (0 < $num) {
+                $bitArray[$i] = $num;
+            }
+        }
+        fclose($fh);
+        return $bitArray;
 	}
 }
