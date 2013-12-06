@@ -50,6 +50,7 @@ class LtBloomFilter {
 	/**
 	 * 设置持久化所用的镜像文件
 	 * @param string $filePath
+     * @todo 切割成多个文件存储，以避免文件太大时fseek()失效
 	 *
 	 * 以定时将内存中的BitArray存储到硬盘上
 	 */
@@ -251,7 +252,6 @@ class LtBloomFilter {
      */
     protected function bitSet(&$arr, $k) {
         list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
-
         $mask = 1 << ($bitPos - 1);
         if (isset($arr[$arrKey])) {
             $arr[$arrKey] = $arr[$arrKey] | $mask;
@@ -271,9 +271,7 @@ class LtBloomFilter {
      */
     protected function isBitSet(&$arr, $k) {
         list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
-
         $mask = 1 << ($bitPos - 1);
-
         if (isset($arr[$arrKey]) && 0 < ($arr[$arrKey] & $mask)) {
             return true;
         } else {
