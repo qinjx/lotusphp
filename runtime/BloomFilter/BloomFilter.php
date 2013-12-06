@@ -194,7 +194,7 @@ class LtBloomFilter {
 	 * 数组持久化
 	 */
 	protected function saveToDisk($arr, $file) {
-        $fh = fopen($file, "w");
+        $fh = fopen($file, "r+");
         foreach($arr as $k => $v) {
             fseek($fh, 0, SEEK_END);
             $fileSize = ftell($fh);
@@ -209,7 +209,6 @@ class LtBloomFilter {
             fwrite($fh, pack("d", $arr[$k]));
         }
         fclose($fh);
-
 	}
 
 	protected function loadFromDisk($file) {

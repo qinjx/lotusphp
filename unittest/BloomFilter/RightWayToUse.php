@@ -68,7 +68,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         $bf->init();
 
         //初始化完毕，测试其效果
-        for ($i = 0; $i < 100; $i++) {
+        for ($i = 0; $i < 500; $i++) {
             $str = $this->randomString(16);
             $this->assertFalse($bf->has($str));
             $bf->add($str);
@@ -114,10 +114,30 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
             $bitArr[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
         }
         $bfp = new LtBloomFilterProxy();
+        $bfp->setImageFile($file);
         $bfp->saveToDisk($bitArr, $file);
         $loaded = $bfp->loadFromDisk($file);
         unlink($file);
         $this->assertEquals($bitArr, $loaded);
+    }
+
+    public function testBitArraySaveAndLoad2()
+    {
+        $file = sys_get_temp_dir() . "/bf-unittest-" . uniqid() . ".bloom";
+        $bitArr1 = array();
+        $bitArr2 = array();
+        for ($i = 0; $i < 10; $i++) {
+            $bitArr1[mt_rand(0, 99)] = mt_rand(0, 999);
+            $bitArr2[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
+        }
+        $bfp = new LtBloomFilterProxy();
+        $bfp->setImageFile($file);
+        $bfp->saveToDisk($bitArr1, $file);
+        $bfp->saveToDisk($bitArr2, $file);
+
+        $loaded = $bfp->loadFromDisk($file);
+        unlink($file);
+        $this->assertEquals($this->num_array_merge_num($bitArr1, $bitArr2), $loaded);
     }
 
     protected function randomString($len = null)
@@ -132,6 +152,19 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         }
 
         return $str;
+    }
+
+    protected function num_array_merge_num() {
+        $args = func_get_args();
+        $arr = $args[0];
+        $i = 1;
+        while (isset($args[$i])) {
+            foreach ($args[$i] as $k => $v) {
+                $arr[$k] = $v;
+            }
+            $i ++;
+        }
+        return $arr;
     }
 
 	protected function setUp()
