@@ -29,9 +29,9 @@ class LtBloomFilterProxy extends LtBloomFilter
         $this->$prop = $val;
     }
 
-	public function hash($str, $bucketSize, $magicNum)
+	public function hash($str, $bitArrayMaxLength, $magicNum)
 	{
-		return parent::hash($str, $bucketSize, $magicNum);
+		return parent::hash($str, $bitArrayMaxLength, $magicNum);
 	}
 
     public function saveToDisk($bitArr, $file)
@@ -42,5 +42,20 @@ class LtBloomFilterProxy extends LtBloomFilter
     public function loadFromDisk($file)
     {
         return parent::loadFromDisk($file);
+    }
+
+    public function bitSet(&$arr, $k)
+    {
+        return parent::bitSet($arr, $k);
+    }
+
+    public function isBitSet(&$arr, $k)
+    {
+        return parent::isBitSet($arr, $k);
+    }
+
+    public function calcKeyAndPos($k)
+    {
+        return parent::calcKeyAndPos($k);
     }
 }

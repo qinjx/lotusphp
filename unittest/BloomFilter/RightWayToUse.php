@@ -12,6 +12,8 @@
  *      hash结果不越界 @see RightWayToUseBloomFilter::testHash2()
  *      hash冲突率恰当 @todo 暂时不测试这个
  *  BitArray位操作
+ *      int数组索引和bit位置计算 @see RightWayToUseBloomFilter::testBitArraycalcKeyAndPos()
+ *      位设置和读取 @see RightWayToUseBloomFilter::testBitArrayOp()
  *  BitArray持久化
  *      新建文件并写入 @see RightWayToUseBloomFilter::testBitArraySaveAndLoad1()
  *      读取非空文件并修改和追加 @see RightWayToUseBloomFilter::testBitArraySaveAndLoad2()
@@ -109,10 +111,11 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
     public function testBitArraySaveAndLoad1()
     {
         $file = sys_get_temp_dir() . "/bf-unittest-" . uniqid() . ".bloom";
-        $bitArr = array();
+        $bitArr = array(1);
         for ($i = 0; $i < 10; $i++) {
             $bitArr[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
         }
+        $bitArr[] = PHP_INT_MAX;
         $bfp = new LtBloomFilterProxy();
         $bfp->setImageFile($file);
         $bfp->saveToDisk($bitArr, $file);
@@ -130,6 +133,8 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
             $bitArr1[mt_rand(0, 99)] = mt_rand(0, 999);
             $bitArr2[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
         }
+        $bitArr1[] = 1;
+        $bitArr2[] = PHP_INT_MAX;
         $bfp = new LtBloomFilterProxy();
         $bfp->setImageFile($file);
         $bfp->saveToDisk($bitArr1, $file);
@@ -140,15 +145,61 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         $this->assertEquals($this->num_array_merge_num($bitArr1, $bitArr2), $loaded);
     }
 
+    public function testBitArrayOp()
+    {
+        $bfp = new LtBloomFilterProxy();
+        $arr = array();
+        $bitPosArr = array(
+            3,
+            0,1,
+            63,64,
+            31,32,
+            PHP_INT_MAX-1,
+            PHP_INT_MAX
+        );
+
+        for ($i = 0; $i < 100; $i++) {
+            $bitPosArr[] = mt_rand();
+        }
+
+        foreach($bitPosArr as $k) {
+            $this->assertFalse($bfp->isBitSet($arr, $k));
+            $bfp->bitSet($arr, $k);
+            $this->assertTrue($bfp->isBitSet($arr, $k));
+        }
+    }
+
+    public function testBitArrayCalcKeyAndPos()
+    {
+        $bfp = new LtBloomFilterProxy();
+        $a = array(
+            0 => array(0, 1),
+            1 => array(0, 2),
+            30 => array(0, 31),
+        );
+        if (8 === PHP_INT_SIZE) {//64-bit platform
+            $a[31] = array(0, 32);
+            $a[32] = array(0, 33);
+            $a[62] = array(0, 63);
+            $a[63] = array(1, 1);
+            $a[64] = array(1, 2);
+            $a[PHP_INT_MAX] = array(146402730743726600, 8);
+        }
+
+        foreach ($a as $k => $exp) {
+            $this->assertEquals($exp, $bfp->calcKeyAndPos($k));
+        }
+    }
+
     protected function randomString($len = null)
     {
         $str = "";
         if (null === $len) {
-            $len = mt_rand(1, 512);
+            $len = mt_rand(1, 256);
         }
 
         for ($i = 0; $i < $len; $i++) {
-            $str .= ord(mt_rand(0, 256));
+            $str .= ord(mt_rand(0, 512));
         }
 
         return $str;

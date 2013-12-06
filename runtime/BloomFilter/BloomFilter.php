@@ -1,7 +1,6 @@
 <?php
 /**
  * Class LtBloomFilter
- * @todo 使用integer array模拟一个bit array，减少内存占用
  */
 class LtBloomFilter {
 	protected $bucketSize;
@@ -171,14 +170,14 @@ class LtBloomFilter {
 
 	/**
 	 * @param string $str
-	 * @param integer $bucketSize
+	 * @param string $bitArrayMaxLength
 	 * @param integer $magicNum
-	 * @return integer
+	 * @return string bit integer
 	 *
 	 * 此hash算法借鉴自PHP内置的hash算法：https://github.com/php/php-src/blob/master/Zend/zend_hash.h
 	 * 但由于PHP整数边界的问题，使用bcmath来运算，也就不能使用DJBX33A算法了
 	 */
-	protected function hash($str, $bucketSize, $magicNum) {
+	protected function hash($str, $bitArrayMaxLength, $magicNum) {
 		$strLen = strlen($str);
 		$hash = 5381;
 		for ($i = 0; $i < $strLen; $i ++) {
@@ -187,14 +186,22 @@ class LtBloomFilter {
 				bcmul((string) $magicNum, $hash)
 			);
 		}
-		return bcmod($hash, (string) $bucketSize);
+		return bcmod($hash, $bitArrayMaxLength);
 	}
 
 	/*
 	 * 数组持久化
+	 *
 	 */
-	protected function saveToDisk($arr, $file) {
-        $fh = fopen($file, "r+");
+    /**
+     * 数组持久化
+     *
+     * @param array $arr 要持久化的数组
+     * @param string $file 文件路径（需先建好）
+     * @return bool
+     */
+    protected function saveToDisk($arr, $file) {
+        $fh = fopen($file, "r+");//注意，fopen($file, "a")会导致fseek失效，不能用，官方文档有说明
         foreach($arr as $k => $v) {
             fseek($fh, 0, SEEK_END);
             $fileSize = ftell($fh);
@@ -209,9 +216,16 @@ class LtBloomFilter {
             fwrite($fh, pack("d", $arr[$k]));
         }
         fclose($fh);
+        return true;
 	}
 
-	protected function loadFromDisk($file) {
+    /**
+     * 从持久化文件中加载数组
+     *
+     * @param $file string $file 文件路径（需先建好）
+     * @return array
+     */
+    protected function loadFromDisk($file) {
         $fh = fopen($file, "r");
         fseek($fh, 0, SEEK_END);
         $fileSize = ftell($fh);
@@ -228,4 +242,63 @@ class LtBloomFilter {
         fclose($fh);
         return $bitArray;
 	}
+
+    /**
+     * 设置BitArray的某位为1
+     * @param array ref $arr
+     * @param int $k
+     * @return bool
+     */
+    protected function bitSet(&$arr, $k) {
+        list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
+
+        $mask = 1 << ($bitPos - 1);
+        if (isset($arr[$arrKey])) {
+            $arr[$arrKey] = $arr[$arrKey] | $mask;
+        } else {
+            $arr[$arrKey] = $mask;
+        }
+
+        return true;
+    }
+
+    /**
+     * 查询BitArray的某位是否为1
+     *
+     * @param array ref $arr
+     * @param int $k
+     * @return bool
+     */
+    protected function isBitSet(&$arr, $k) {
+        list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
+
+        $mask = 1 << ($bitPos - 1);
+
+        if (isset($arr[$arrKey]) && 0 < ($arr[$arrKey] & $mask)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * 计算int数组索引和bit位置
+     *
+     * @param string $k bit integer
+     * @return array
+     */
+    protected function calcKeyAndPos($k) {
+        $bitWidth = (string) (8 * PHP_INT_SIZE - 1);
+
+        //数组下标转换成bit位个数时，加1，使下面的逻辑过程更贴近现实世界的自然思维
+        bcscale(2);
+        $intArrayKey = ceil(
+                bcdiv(bcadd($k, "1"), $bitWidth)
+            ) - 1;
+        $bitPos = bcmod($k, $bitWidth) + 1;
+        return array(
+            $intArrayKey,
+            $bitPos
+        );
+    }
 }
