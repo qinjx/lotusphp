@@ -168,12 +168,6 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
     public function testBitArrayOp()
     {
         $bfp = new LtBloomFilterProxy();
-
-
-        for ($i = 0; $i < 100; $i++) {
-            $bitPosArr[] = $this->randomBigNumber();
-        }
-
         $bitPosArr = array(
             3,4,
             0,1,
@@ -182,6 +176,11 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
             PHP_INT_MAX-1,
             PHP_INT_MAX
         );
+
+        for ($i = 0; $i < 100; $i++) {
+            $bitPosArr[] = $this->randomBigNumber();
+        }
+
         foreach($bitPosArr as $k) {
             $arr = array();
             $this->assertFalse($bfp->isBitSet($arr, $k));
