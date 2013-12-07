@@ -86,7 +86,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 
         for ($i = 0; $i < 100; $i++) {
             $str = $this->randomString();
-            $bucketSize = mt_rand(2, PHP_INT_MAX);
+            $bucketSize = $this->randomBigNumber();
             $magicNumber = $bfp->magicNumbers[mt_rand(0, count($bfp->magicNumbers)-1)];
             $hash = $bfp->hash($str, $bucketSize, $magicNumber);
             $this->assertEquals($hash, $bfp->hash($str, $bucketSize, $magicNumber));
@@ -100,7 +100,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 
         for ($i = 0; $i < 100; $i++) {
             $str = $this->randomString();
-            $bucketSize = mt_rand(2, PHP_INT_MAX);
+            $bucketSize = $this->randomBigNumber(1);
             $magicNumber = $bfp->magicNumbers[mt_rand(0, count($bfp->magicNumbers)-1)];
             $hash = $bfp->hash($str, $bucketSize, $magicNumber);
             $this->assertTrue(0 <= $hash);
@@ -113,7 +113,7 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         $file = sys_get_temp_dir() . "/bf-unittest-" . uniqid() . ".bloom";
         $bitArr = array(1);
         for ($i = 0; $i < 10; $i++) {
-            $bitArr[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
+            $bitArr[mt_rand(0, 99)] = $this->randomBigNumber();
         }
         $bitArr[] = PHP_INT_MAX;
         $bfp = new LtBloomFilterProxy();
@@ -130,8 +130,8 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         $bitArr1 = array();
         $bitArr2 = array();
         for ($i = 0; $i < 10; $i++) {
-            $bitArr1[mt_rand(0, 99)] = mt_rand(0, 999);
-            $bitArr2[mt_rand(0, 99)] = mt_rand(0, PHP_INT_MAX);
+            $bitArr1[mt_rand(0, 99)] = $this->randomBigNumber();
+            $bitArr2[mt_rand(0, 99)] = $this->randomBigNumber();
         }
         $bitArr1[] = 1;
         $bitArr2[] = PHP_INT_MAX;
@@ -142,15 +142,15 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
 
         $loaded = $bfp->loadFromDisk($file);
         unlink($file);
-        $this->assertEquals($this->num_array_merge_num($bitArr1, $bitArr2), $loaded);
+        $this->assertEquals($this->numArrayMerge($bitArr1, $bitArr2), $loaded);
     }
 
-    public function testBitArrayOp()
+    public function testBitArrayOp1()
     {
         $bfp = new LtBloomFilterProxy();
         $arr = array();
         $bitPosArr = array(
-            3,
+            3,4,
             0,1,
             63,64,
             31,32,
@@ -158,11 +158,32 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
             PHP_INT_MAX
         );
 
+        foreach($bitPosArr as $k) {
+            $this->assertFalse($bfp->isBitSet($arr, $k));
+            $bfp->bitSet($arr, $k);
+            $this->assertTrue($bfp->isBitSet($arr, $k));
+        }
+    }
+
+    public function testBitArrayOp()
+    {
+        $bfp = new LtBloomFilterProxy();
+
+
         for ($i = 0; $i < 100; $i++) {
-            $bitPosArr[] = mt_rand();
+            $bitPosArr[] = $this->randomBigNumber();
         }
 
+        $bitPosArr = array(
+            3,4,
+            0,1,
+            63,64,
+            31,32,
+            PHP_INT_MAX-1,
+            PHP_INT_MAX
+        );
         foreach($bitPosArr as $k) {
+            $arr = array();
             $this->assertFalse($bfp->isBitSet($arr, $k));
             $bfp->bitSet($arr, $k);
             $this->assertTrue($bfp->isBitSet($arr, $k));
@@ -199,13 +220,20 @@ class RightWayToUseBloomFilter extends PHPUnit_Framework_TestCase
         }
 
         for ($i = 0; $i < $len; $i++) {
-            $str .= ord(mt_rand(0, 512));
+            $str .= ord($this->randomBigNumber(0, 16));
         }
 
         return $str;
     }
 
-    protected function num_array_merge_num() {
+    protected function randomBigNumber($minBits = 1, $maxBits = null) {
+        if (null === $maxBits) {
+            $maxBits = 8 * PHP_INT_SIZE - 2;
+        }
+        return mt_rand(1 << $minBits, 1 << mt_rand($minBits + 1, $maxBits));
+    }
+
+    protected function numArrayMerge() {
         $args = func_get_args();
         $arr = $args[0];
         $i = 1;
