@@ -25,8 +25,14 @@
  * 					ImageFile不存在，且其上级目录不可写 @see WrongWayToUseBloomFilter::testImageFileNotExistsAndParentDirPermissionDenied
  * 			设置了正确的属性，调用了init()方法 @see RightWayToUseBloomFilter
  * 正常初始化了
- * 		传递给add()的参数不合法 @see WrongWayToUseBloomFilter::testBadAddDataType
+ *  调用不成功
+ *      传递给add()的参数不合法 @see WrongWayToUseBloomFilter::testBadAddDataType
  * 		传递给has()的参数不合法 @see WrongWayToUseBloomFilter::testBadHasDataType
+ *  调用成功，但带来了脏数据 @notice 这些错误的使用方法，无法在代码中检测并报错，只能事先说明，请使用者自行规避
+ *      通过add()存储的字符串个数超过了bucketSize
+ *      调用add()之后又通过setXXX()方法改变bloom filter的bucket size, error rate, image file（syncThreshHold是可以改的）
+ *      参数不同的多个bloom filter实例共用了同一个image file
+ *
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 class WrongWayToUseBloomFilter extends PHPUnit_Framework_TestCase
