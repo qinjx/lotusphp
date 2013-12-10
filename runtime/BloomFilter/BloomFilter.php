@@ -9,7 +9,7 @@ class LtBloomFilter {
 	protected $syncThreshHold = 1;
 
 	protected $bitArray = array();
-    protected $bitArrayChanged = array();
+	protected $bitArrayChanged = array();
 	protected $bitArrayMaxLength;
 	protected $syncCounter = 0;
 	protected $magicNumbers = array(
@@ -50,7 +50,7 @@ class LtBloomFilter {
 	/**
 	 * 设置持久化所用的镜像文件
 	 * @param string $filePath
-     * @todo 切割成多个文件存储，以避免文件太大时fseek()失效
+	 * @todo 切割成多个文件存储，以避免文件太大时fseek()失效
 	 *
 	 * 以定时将内存中的BitArray存储到硬盘上
 	 */
@@ -136,7 +136,7 @@ class LtBloomFilter {
 					if ($this->syncCounter >= $this->syncThreshHold) {
 						$this->saveToDisk($this->bitArrayChanged, $this->imageFile);
 						$this->syncCounter = 0;
-                        $this->bitArrayChanged = array();
+						$this->bitArrayChanged = array();
 					}
 				}
 				return true;
@@ -194,109 +194,109 @@ class LtBloomFilter {
 	 * 数组持久化
 	 *
 	 */
-    /**
-     * 数组持久化
-     *
-     * @param array $arr 要持久化的数组
-     * @param string $file 文件路径（需先建好）
-     * @return bool
-     */
-    protected function saveToDisk($arr, $file) {
-        $fh = fopen($file, "r+");//注意，fopen($file, "a")会导致fseek失效，不能用，官方文档有说明
-        foreach($arr as $k => $v) {
-            fseek($fh, 0, SEEK_END);
-            $fileSize = ftell($fh);
-            $insertPos = $k * PHP_INT_SIZE;
-            if ($insertPos > $fileSize) {//此key之前没有持久化过，插入之，并补齐其和此前最后一个元素间的空隙
-                $emptyToFill = $k - $fileSize / PHP_INT_SIZE;
-                for ($i = 0; $i < $emptyToFill; $i ++) {
-                    fwrite($fh, pack("d", 0));
-                }
-            }
-            fseek($fh, $insertPos);
-            fwrite($fh, pack("d", $arr[$k]));
-        }
-        fclose($fh);
-        return true;
+	/**
+	 * 数组持久化
+	 *
+	 * @param array $arr 要持久化的数组
+	 * @param string $file 文件路径（需先建好）
+	 * @return bool
+	 */
+	protected function saveToDisk($arr, $file) {
+		$fh = fopen($file, "r+");//注意，fopen($file, "a")会导致fseek失效，不能用，官方文档有说明
+		foreach($arr as $k => $v) {
+			fseek($fh, 0, SEEK_END);
+			$fileSize = ftell($fh);
+			$insertPos = $k * PHP_INT_SIZE;
+			if ($insertPos > $fileSize) {//此key之前没有持久化过，插入之，并补齐其和此前最后一个元素间的空隙
+				$emptyToFill = $k - $fileSize / PHP_INT_SIZE;
+				for ($i = 0; $i < $emptyToFill; $i ++) {
+					fwrite($fh, pack("d", 0));
+				}
+			}
+			fseek($fh, $insertPos);
+			fwrite($fh, pack("d", $arr[$k]));
+		}
+		fclose($fh);
+		return true;
 	}
 
-    /**
-     * 从持久化文件中加载数组
-     *
-     * @param $file string $file 文件路径（需先建好）
-     * @return array
-     */
-    protected function loadFromDisk($file) {
-        $fh = fopen($file, "r");
-        fseek($fh, 0, SEEK_END);
-        $fileSize = ftell($fh);
-        $arrLen = $fileSize / PHP_INT_SIZE;
-        $bitArray = array();
-        for ($i = 0; $i < $arrLen; $i ++) {
-            fseek($fh, $i * PHP_INT_SIZE);
-            $unpackedArray = unpack("d", fread($fh, PHP_INT_SIZE));
-            $num = $unpackedArray[1];
-            if (0 < $num) {
-                $bitArray[$i] = $num;
-            }
-        }
-        fclose($fh);
-        return $bitArray;
+	/**
+	 * 从持久化文件中加载数组
+	 *
+	 * @param $file string $file 文件路径（需先建好）
+	 * @return array
+	 */
+	protected function loadFromDisk($file) {
+		$fh = fopen($file, "r");
+		fseek($fh, 0, SEEK_END);
+		$fileSize = ftell($fh);
+		$arrLen = $fileSize / PHP_INT_SIZE;
+		$bitArray = array();
+		for ($i = 0; $i < $arrLen; $i ++) {
+			fseek($fh, $i * PHP_INT_SIZE);
+			$unpackedArray = unpack("d", fread($fh, PHP_INT_SIZE));
+			$num = $unpackedArray[1];
+			if (0 < $num) {
+				$bitArray[$i] = $num;
+			}
+		}
+		fclose($fh);
+		return $bitArray;
 	}
 
-    /**
-     * 设置BitArray的某位为1
-     * @param array ref $arr
-     * @param int $k
-     * @return bool
-     */
-    protected function bitSet(&$arr, $k) {
-        list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
-        $mask = 1 << ($bitPos - 1);
-        if (isset($arr[$arrKey])) {
-            $arr[$arrKey] = $arr[$arrKey] | $mask;
-        } else {
-            $arr[$arrKey] = $mask;
-        }
+	/**
+	 * 设置BitArray的某位为1
+	 * @param array ref $arr
+	 * @param int $k
+	 * @return bool
+	 */
+	protected function bitSet(&$arr, $k) {
+		list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
+		$mask = 1 << ($bitPos - 1);
+		if (isset($arr[$arrKey])) {
+			$arr[$arrKey] = $arr[$arrKey] | $mask;
+		} else {
+			$arr[$arrKey] = $mask;
+		}
 
-        return true;
-    }
+		return true;
+	}
 
-    /**
-     * 查询BitArray的某位是否为1
-     *
-     * @param array ref $arr
-     * @param int $k
-     * @return bool
-     */
-    protected function isBitSet(&$arr, $k) {
-        list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
-        $mask = 1 << ($bitPos - 1);
-        if (isset($arr[$arrKey]) && 0 < ($arr[$arrKey] & $mask)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
+	/**
+	 * 查询BitArray的某位是否为1
+	 *
+	 * @param array ref $arr
+	 * @param int $k
+	 * @return bool
+	 */
+	protected function isBitSet(&$arr, $k) {
+		list($arrKey, $bitPos) = $this->calcKeyAndPos($k);
+		$mask = 1 << ($bitPos - 1);
+		if (isset($arr[$arrKey]) && 0 < ($arr[$arrKey] & $mask)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
-    /**
-     * 计算int数组索引和bit位置
-     *
-     * @param string $k bit integer
-     * @return array
-     */
-    protected function calcKeyAndPos($k) {
-        $bitWidth = (string) (8 * PHP_INT_SIZE - 1);
+	/**
+	 * 计算int数组索引和bit位置
+	 *
+	 * @param string $k bit integer
+	 * @return array
+	 */
+	protected function calcKeyAndPos($k) {
+		$bitWidth = (string) (8 * PHP_INT_SIZE - 1);
 
-        //数组下标转换成bit位个数时，加1，使下面的逻辑过程更贴近现实世界的自然思维
-        bcscale(2);
-        $intArrayKey = ceil(
-                bcdiv(bcadd($k, "1"), $bitWidth)
-            ) - 1;
-        $bitPos = bcmod($k, $bitWidth) + 1;
-        return array(
-            $intArrayKey,
-            $bitPos
-        );
-    }
+		//数组下标转换成bit位个数时，加1，使下面的逻辑过程更贴近现实世界的自然思维
+		bcscale(2);
+		$intArrayKey = ceil(
+				bcdiv(bcadd($k, "1"), $bitWidth)
+			) - 1;
+		$bitPos = bcmod($k, $bitWidth) + 1;
+		return array(
+			$intArrayKey,
+			$bitPos
+		);
+	}
 }
