@@ -147,6 +147,20 @@ class LtUrl
 		return $baseUrl . $url;
 	}
 
+    public function getRootDomain($hostname) {
+        $tokens = explode(".", $hostname);
+        $tokenLen = count($tokens);
+        if (2 < $tokenLen) {
+
+        } else {
+            return null;
+        }
+    }
+
+    public function getAbsoluteUrl($currentUrl, $href) {
+
+    }
+
 	/**
 	 * standard build url
 	 * @param array $arr

@@ -84,7 +84,7 @@ class LtDispatcher
 		$actionClassName = $module . $action . $classType;
 		if (!class_exists($actionClassName))
 		{
-			$this->error_404();
+			$this->error_404($actionClassName);
 			//DebugHelper::debug("{$classType}_CLASS_NOT_FOUND", array(strtolower($classType) => $action));
 			//trigger_error("{$actionClassName} CLASS NOT FOUND! module={$module} action={$action} classType={$classType}");
 		}
@@ -116,7 +116,7 @@ class LtDispatcher
 	/**
 	 * error 404
 	 */
-	protected function error_404()
+	protected function error_404($actionClassName)
 	{
 		header("HTTP/1.0 404 Not Found");
 		header("Status: 404 Not Found");
@@ -130,13 +130,13 @@ class LtDispatcher
 			}
 		}
 		// 必需大于 512 bytes，否则404在某些浏览器中不显示
-		echo '<!DOCTYPE html ><html><head><title>Error 404</title></head><body>Action Class Not Found
+		echo "<!DOCTYPE html ><html><head><title>Error 404</title></head><body>Action Class Not Found: $actionClassName
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
                                                                                                     
-            </body></html>';
+            </body></html>";
 		exit();
 	}
 }
