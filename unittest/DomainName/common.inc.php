@@ -8,7 +8,7 @@ require_once $lotusHome . "runtime/DomainName/DomainName.php";
  */
 class LtDomainNameProxy extends LtDomainName
 {
-    public $TLDs = array(
+    public $TLD = array(
         "aero","asia","biz","cat","com","coop","edu","gov","local","info","int","jobs","mil","mobi","name","net","org",
         "post","pro","tel","xxx",
     );
@@ -19,7 +19,7 @@ class LtDomainNameProxy extends LtDomainName
      * ccTLD list: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
      * Reserved ccSLD: http://mxr.mozilla.org/mozilla-central/source/netwerk/dns/effective_tld_names.dat?raw=1
      */
-    public $ccTLDs = array(
+    public $ccTLD = array(
         "AD","AE","AF","AG","AI","AL","AM","AO","AQ","AR","AS","AT","AU","AW","AX","AZ","BA","BB","BD","BE","BF","BG",
         "BH","BI","BJ","BL","BM","BN","BO","BQ","BR","BS","BT","BV","BW","BY","BZ","CA","CC","CD","CF","CG","CH","CI",
         "CK","CL","CM","CN","CO","CR","CU","CV","CW","CX","CY","CZ","DE","DJ","DK","DM","DO","DZ","EC","EE","EG","EH",

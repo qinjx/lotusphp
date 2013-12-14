@@ -40,11 +40,12 @@ class RightWayToUseDomainName extends PHPUnit_Framework_TestCase
 		$dn->init();
 
 		//初始化完毕，测试其效果
-		$dn->add("abcdefgh1234567890");
-		$dn->add("本用例展示了LtAutoloader能识别哪些类和函数定义");
-		$this->assertTrue($dn->has("abcdefgh1234567890"));
-		$this->assertTrue($dn->has("本用例展示了LtAutoloader能识别哪些类和函数定义"));
-		$this->assertFalse($dn->has("http://example.com/"));
+        $this->assertEquals("example.com", $dn->getRootDomain("example.com"));
+        $this->assertEquals("example.com", $dn->getRootDomain("www.example.com"));
+        $this->assertEquals("google.com.hk", $dn->getRootDomain("image.google.com.hk"));
+        $this->assertEquals("online.sh.cn", $dn->getRootDomain("www.online.sh.cn"));
+        $this->assertEquals("sh.cn", $dn->getRootDomain("www.sh.cn"));
+        $this->assertEquals("z.cn", $dn->getRootDomain("deal.z.cn"));
 	}
 
     public function testGetRootDomainTLDRootOnly() {
