@@ -8,7 +8,7 @@ require_once $lotusHome . "runtime/DomainName/DomainName.php";
  */
 class LtDomainNameProxy extends LtDomainName
 {
-    public $TLD = array(
+    protected $TLD = array(
         "aero" => 1, "asia" => 1, "biz" => 1, "cat" => 1, "com" => 1, "coop" => 1, "edu" => 1, "gov" => 1, "local" => 1,
         "info" => 1, "int" => 1, "jobs" => 1, "mil" => 1, "mobi" => 1, "name" => 1, "net" => 1, "org" => 1, "post" => 1,
         "pro" => 1, "tel" => 1, "xxx" => 1
@@ -23,6 +23,7 @@ class LtDomainNameProxy extends LtDomainName
     protected $ccTLD = array(
         "cn" => array(
             "sh" => 1,
+            "com" => 1,
         ),
         "hk" => array(
             "com" => 1,
