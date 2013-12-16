@@ -4,19 +4,12 @@
  * 按本文档操作一定会得到正确的结果
  *
  * 接口测试
- *      各类setXXX方法
- *      add和has方法 @see RightWayToUseDomainName::testAddAndHas()
+ *      getRootDomain()方法
+ *          国际域名(gTLD)
+ *              二级域名 @see RightWayToUseDomainName::testGetRootDomainTLDRootOnly()
+ *              三级或者更多级的子域名 @see RightWayToUseDomainName::testGetRootDomainTLDSubDomain()
+ *          国家域名(ccTLD)
  * 内部实现测试
- *  Hash方法
- *      相同字串多次hash得到相同结果 @see RightWayToUseDomainName::testHash1()
- *      hash结果不越界 @see RightWayToUseDomainName::testHash2()
- *      hash冲突率恰当 @todo 暂时不测试这个
- *  BitArray位操作
- *      int数组索引和bit位置计算 @see RightWayToUseDomainName::testBitArraycalcKeyAndPos()
- *      位设置和读取 @see RightWayToUseDomainName::testBitArrayOp()
- *  BitArray持久化
- *      新建文件并写入 @see RightWayToUseDomainName::testBitArraySaveAndLoad1()
- *      读取非空文件并修改和追加 @see RightWayToUseDomainName::testBitArraySaveAndLoad2()
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 class RightWayToUseDomainName extends PHPUnit_Framework_TestCase
@@ -44,42 +37,39 @@ class RightWayToUseDomainName extends PHPUnit_Framework_TestCase
         $this->assertEquals("example.com", $dn->getRootDomain("www.example.com"));
         $this->assertEquals("google.com.hk", $dn->getRootDomain("image.google.com.hk"));
         $this->assertEquals("online.sh.cn", $dn->getRootDomain("www.online.sh.cn"));
+        $this->assertEquals("sina.com.cn", $dn->getRootDomain("www.blog.user1.sina.com.cn"));
         $this->assertEquals("sh.cn", $dn->getRootDomain("www.sh.cn"));
         $this->assertEquals("z.cn", $dn->getRootDomain("deal.z.cn"));
 	}
 
     public function testGetRootDomainTLDRootOnly() {
-        $url = new LtUrl;
-        foreach ($this->TLDs as $tld) {
+        $dn = new LtDomainNameProxy();
+        $dn->init();
+        foreach ($dn->TLD as $tld => $tmp) {
             $flag = mt_rand(0,1);
             if ($flag) {
                 $tld = strtolower($tld);
             }
-            $hostname = $this->randomAlphaString() . "." . $tld;
-            $this->assertEquals($hostname, $url->getRootDomain($hostname));
+            $rootDomain = $dn->randomDomainLabel() . "." . $tld;
+            $this->assertEquals($rootDomain, $dn->getRootDomain($rootDomain));
         }
     }
 
-    /**
-     * @param $hostname
-     * @param $exp
-     *
-     * @dataProvider dpGetRootDomain
-     */
-    public function testGetRootDomain($hostname, $exp) {
-        $url = new LtUrl;
-        $this->assertEquals($exp, $url->getRootDomain($hostname));
-    }
-
-    protected function randomAlphaString($min=1, $max=null) {
-        if (null == $max) {
-            $max = mt_rand($min,512);
+    public function testGetRootDomainTLDSubDomain() {
+        $dn = new LtDomainNameProxy();
+        $dn->init();
+        foreach ($dn->TLD as $tld => $tmp) {
+            $flag = mt_rand(0,1);
+            if ($flag) {
+                $tld = strtolower($tld);
+            }
+            $rootDomain = $dn->randomDomainLabel() . "." . $tld;
+            $hostname = $rootDomain;
+            for ($j = 0; $j < 3; $j ++) {
+                $hostname = $dn->randomDomainLabel(1, 5) . "." . $hostname;
+            }
+            $this->assertEquals($rootDomain, $dn->getRootDomain($hostname));
         }
-        $str = "";
-        for ($i = 0; $i < $max; $i ++) {
-            $str = chr(mt_rand(48, 90));
-        }
-        return $str;
     }
 
 	protected function setUp()

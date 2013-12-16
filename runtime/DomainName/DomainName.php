@@ -13,9 +13,16 @@ class LtDomainName {
         "pro" => 1, "tel" => 1, "xxx" => 1
     );
 
+    /**
+     * ccTLD
+     * @var array
+     * ccTLD list: http://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+     * Reserved ccSLD: http://mxr.mozilla.org/mozilla-central/source/netwerk/dns/effective_tld_names.dat?raw=1
+     */
     protected $ccTLD = array(
         "cn" => array(
             "sh" => 1,
+            "com" => 1,
         ),
         "hk" => array(
             "com" => 1,
@@ -58,24 +65,26 @@ class LtDomainName {
         if ("." !== substr($hostname, 0, 1) && "." !== substr($hostname, -1) && 255 > strlen($hostname)) {
             $labels = explode(".", $hostname);
             $labelsNum = count($labels);
-            if (1 < $labelsNum && 6 > $labelsNum) {
+            if (1 < $labelsNum && 128 > $labelsNum) {
+                $tld = $labels[$labelsNum - 1];
                 if (
-                    3 <= strlen($labels[$labelsNum-1]) && !isset($this->TLD[$labels[$labelsNum-1]])
+                (3 <= strlen($tld) && isset($this->TLD[$tld]))
                     or
-                    2 === strlen($labels[$labelsNum-1]) && !isset($this->ccTLD[$labels[$labelsNum-1]])
+                (2 === strlen($tld) && isset($this->ccTLD[$tld]))
                 ) {
+                    for ($i = $labelsNum-1; $i >= 0; $i --) {
+                        if (true === $this->isValidDomainLabel($labels[$i])) {
+                            if ($i >= $labelsNum - 3) {
+                                $this->domainLabels[$labelsNum - $i - 1] = $labels[$i];
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+                    return true;
+                } else {
                     return false;
                 }
-                for ($i = $labelsNum-1; $i >= 0; $i --) {
-                    if (true === $this->isValidDomainLabel($labels[$i])) {
-                        if ($i >= $labelsNum - 3) {
-                            $this->domainLabels[$labelsNum - $i - 1] = $labels[$i];
-                        }
-                    } else {
-                        return false;
-                    }
-                }
-                return true;
             }
         }
         return false;
