@@ -37,16 +37,16 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
         return array(
             //包含ISO标准不允许的ASCII字符
             array("test-" . chr(mt_rand(1, 44)) . ".example.com"),
-            array("test-" . chr(mt_rand(46, 47)) . ".example.com"),
+            array(chr(mt_rand(46, 47)) . ".example.com"),
             array("test-" . chr(mt_rand(58, 64)) . ".example.com"),
             array("test-" . chr(mt_rand(91, 96)) . ".example.com"),
             array("test-" . chr(mt_rand(123, 127)) . ".example.com"),
             //不包含ISO标准不允许的ASCII字符
             //  点号个数=0
             array("example"),
-            //  点号个数>4
-            array("6.5.4.3.example.com"),
-            //  点号个数介于1和4之间
+            //  点号个数>126
+//            array("6.5.4.3.example.com"),
+            //  点号个数介于1和126之间
             //      点号出现在字串头尾
 			array("www.example."),
             array(".example.com"),
