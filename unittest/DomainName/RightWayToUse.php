@@ -17,7 +17,7 @@ class RightWayToUseDomainName extends PHPUnit_Framework_TestCase
 	/**
 	 * -------------------------------------------------------------------
 	 * 本测试用例期望效果：
-	 * 调用add()方法加入bit array后，调用has()方法能返回true
+	 * 使用getRootDomain()方法，正确解析网站域名
 	 */
 	public function testMostUsedWay()
 	{

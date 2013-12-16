@@ -28,27 +28,32 @@ class LtDomainName {
             "com" => 1,
         ),
     );
+
     protected $hasBeenInitialized = false;
-    protected $domainLabels = array();
 
     public function init() {
         $this->hasBeenInitialized = true;
     }
 
+    /**
+     * 从URL中的主机名解析出网站根域名
+     * @param string $hostname URL中的主机名
+     * @return bool|string 网站根域名
+     */
     public function getRootDomain($hostname) {
         if ($this->hasBeenInitialized) {
-            if (is_string($hostname) && true === $this->isValidSubDomain($hostname)) {
-                $sld = $this->domainLabels[1] . "." . $this->domainLabels[0];
-                if (2 === count($this->domainLabels)) {
+            if (is_string($hostname) && $Last3Tokens = $this->getValidLast3DomainLabels($hostname)) {
+                $sld = $Last3Tokens[1] . "." . $Last3Tokens[0];
+                if (2 === count($Last3Tokens)) {
                     return $sld;
                 } else {
-                    if (3 <= strlen($this->domainLabels[0])) {//gTLD
+                    if (3 <= strlen($Last3Tokens[0])) {//gTLD
                         return $sld;
                     } else {//ccTLD
-                        if ("www" === $this->domainLabels[2]) {
+                        if ("www" === $Last3Tokens[2]) {
                             return $sld;
-                        } else if (isset($this->ccTLD[$this->domainLabels[0]][$this->domainLabels[1]])) {//Reserved ccSLD
-                            return $this->domainLabels[2] . "." . $sld;
+                        } else if (isset($this->ccTLD[$Last3Tokens[0]][$Last3Tokens[1]])) {//Reserved ccSLD
+                            return $Last3Tokens[2] . "." . $sld;
                         } else {
                             return $sld;
                         }
@@ -61,27 +66,29 @@ class LtDomainName {
         return false;
     }
 
-    protected function isValidSubDomain($hostname) {
+    /**
+     * 获取主机名最后三段，如果只有两段，返回两段
+     * @param $hostname
+     * @return array|bool
+     */
+    protected function getValidLast3DomainLabels($hostname) {
         if ("." !== substr($hostname, 0, 1) && "." !== substr($hostname, -1) && 255 > strlen($hostname)) {
             $labels = explode(".", $hostname);
             $labelsNum = count($labels);
             if (1 < $labelsNum && 128 > $labelsNum) {
                 $tld = $labels[$labelsNum - 1];
-                if (
-                (3 <= strlen($tld) && isset($this->TLD[$tld]))
-                    or
-                (2 === strlen($tld) && isset($this->ccTLD[$tld]))
-                ) {
+                if ($this->isValidTLD($labels)) {
+                    $Last3Tokens = array();
                     for ($i = $labelsNum-1; $i >= 0; $i --) {
                         if (true === $this->isValidDomainLabel($labels[$i])) {
                             if ($i >= $labelsNum - 3) {
-                                $this->domainLabels[$labelsNum - $i - 1] = $labels[$i];
+                                $Last3Tokens[$labelsNum - $i - 1] = $labels[$i];
                             }
                         } else {
                             return false;
                         }
                     }
-                    return true;
+                    return $Last3Tokens;
                 } else {
                     return false;
                 }
@@ -90,9 +97,29 @@ class LtDomainName {
         return false;
     }
 
+    /**
+     * 判断最后一段是不是合法的TLD或者ccTLD
+     * @param $labels
+     * @return bool
+     */
+    protected function isValidTLD($labels) {
+        $tld = $labels[count($labels) - 1];
+        $tldLen = strlen($tld);
+        if (2 == $tldLen) {//ccTLD
+            return isset($this->ccTLD[$tld]);
+        } else {//gTLD and invalid TLD
+            return isset($this->TLD[$tld]);
+        }
+    }
+
+    /**
+     * 判断是否合法的域名，主要条件：最长63字节，不可包含非法字符
+     * @param $label
+     * @return bool
+     */
     protected function isValidDomainLabel($label) {
-        if (63 >= strlen($label)) {
-            $labelLen = strlen($label);
+        $labelLen = strlen($label);
+        if (63 >= $labelLen && 1 <= $labelLen) {
             for($i = 0; $i < $labelLen; $i ++) {
                 $ascii = ord($label[$i]);
                 if (
@@ -102,7 +129,7 @@ class LtDomainName {
                     or
                     $ascii >= 48 && $ascii <= 57 //0-9
                     or
-                    $ascii == 45
+                    $ascii == 45//-
                 ) {
                     // it is valid
                 } else {
