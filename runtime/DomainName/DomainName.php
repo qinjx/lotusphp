@@ -50,9 +50,7 @@ class LtDomainName {
                     if (3 <= strlen($Last3Tokens[0])) {//gTLD
                         return $sld;
                     } else {//ccTLD
-                        if ("www" === $Last3Tokens[2]) {
-                            return $sld;
-                        } else if (isset($this->ccTLD[$Last3Tokens[0]][$Last3Tokens[1]])) {//Reserved ccSLD
+                        if (isset($this->ccTLD[$Last3Tokens[0]][$Last3Tokens[1]])) {//Reserved ccSLD
                             return $Last3Tokens[2] . "." . $sld;
                         } else {
                             return $sld;
@@ -76,7 +74,6 @@ class LtDomainName {
             $labels = explode(".", $hostname);
             $labelsNum = count($labels);
             if (1 < $labelsNum && 128 > $labelsNum) {
-                $tld = $labels[$labelsNum - 1];
                 if ($this->isValidTLD($labels)) {
                     $Last3Tokens = array();
                     for ($i = $labelsNum-1; $i >= 0; $i --) {

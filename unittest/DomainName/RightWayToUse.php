@@ -38,7 +38,8 @@ class RightWayToUseDomainName extends PHPUnit_Framework_TestCase
         $this->assertEquals("google.com.hk", $dn->getRootDomain("image.google.com.hk"));
         $this->assertEquals("online.sh.cn", $dn->getRootDomain("www.online.sh.cn"));
         $this->assertEquals("sina.com.cn", $dn->getRootDomain("www.blog.user1.sina.com.cn"));
-        $this->assertEquals("sh.cn", $dn->getRootDomain("www.sh.cn"));
+        $this->assertEquals("www.sh.cn", $dn->getRootDomain("www.sh.cn"));
+        $this->assertEquals("www.sh.cn", $dn->getRootDomain("blog.www.sh.cn"));
         $this->assertEquals("z.cn", $dn->getRootDomain("deal.z.cn"));
 	}
 
