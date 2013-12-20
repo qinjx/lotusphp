@@ -87,7 +87,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
 	{
 		$dn = new LtDomainName;
         $dn->init();
-        $this->assertFalse($dn->getRootDomain($para));
+        $this->assertNull($dn->getRootDomain($para));
 	}
 
     /**
@@ -97,7 +97,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
     {
         $dn = new LtDomainName;
         $dn->init();
-        $this->assertFalse($dn->getRootDomain($para));
+        $this->assertNull($dn->getRootDomain($para));
     }
 
 	protected function setUp()

@@ -61,19 +61,19 @@ class LtDomainName {
         } else {
             trigger_error("Please call init() first", E_USER_ERROR);
         }
-        return false;
+        return null;
     }
 
     /**
      * 获取主机名最后三段，如果只有两段，返回两段
      * @param $hostname
-     * @return array|bool
+     * @return array|null
      */
     protected function getValidLast3DomainLabels($hostname) {
-        if ("." !== substr($hostname, 0, 1) && "." !== substr($hostname, -1) && 255 > strlen($hostname)) {
+        if ("." !== substr($hostname, 0, 1) && "." !== substr($hostname, -1) && 253 > strlen($hostname)) {
             $labels = explode(".", $hostname);
             $labelsNum = count($labels);
-            if (1 < $labelsNum && 128 > $labelsNum) {
+            if (2 <= $labelsNum && 127 >= $labelsNum) {
                 if ($this->isValidTLD($labels)) {
                     $Last3Tokens = array();
                     for ($i = $labelsNum-1; $i >= 0; $i --) {
@@ -82,16 +82,16 @@ class LtDomainName {
                                 $Last3Tokens[$labelsNum - $i - 1] = $labels[$i];
                             }
                         } else {
-                            return false;
+                            return null;
                         }
                     }
                     return $Last3Tokens;
                 } else {
-                    return false;
+                    return null;
                 }
             }
         }
-        return false;
+        return null;
     }
 
     /**
