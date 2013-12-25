@@ -4,7 +4,7 @@
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 
-class PerformanceTuningDomainName extends PHPUnit_Framework_TestCase
+class PerformanceTuningDomainParser extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * 测试CPU消耗
