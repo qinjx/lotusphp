@@ -47,6 +47,9 @@ class LotusConvertor {
 	 * @param string $type
 	 * @return string
 	 */
+	
+	public function test(){}
+	
 	public function convert($filename,$type='Zf'){
 		$content = file_get_contents($filename);
 		$class = 'Convert'.$type;
