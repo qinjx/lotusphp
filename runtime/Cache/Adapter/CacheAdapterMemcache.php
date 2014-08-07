@@ -20,7 +20,7 @@ class LtCacheAdapterMemcache implements LtCacheAdapter
 	 */
 	public function connect($hostConf)
 	{
-		memcache_connect($hostConf["host"], $hostConf["port"]);
+		return memcache_connect($hostConf["host"], $hostConf["port"]);
 	}
 
 	/**
