@@ -135,19 +135,19 @@ abstract class LtAction
 		{
 			$validator = new LtValidator;
 			$validator->init();
+
 			foreach ($this->dtds as $variable => $dtd)
 			{
-				$from = isset($dtd->from) ? $dtd->from : 'request';
-
 				foreach ($dtd->rules as $ruleKey => $ruleValue)
 				{
 					if ($ruleValue instanceof LtConfigExpression)
 					{
+                        $_ruleValue = NULL;
 						eval('$_ruleValue = ' . $ruleValue->__toString());
-						$dtd->rules[$ruleKey] = $_ruleValue;
+                        $dtd->rules[$ruleKey] = $_ruleValue;
 					}
 				}
-				$error_messages = $validator->validate($this->context->$from($variable), $dtd);
+				$error_messages = $validator->validate($dtd);
 				if (!empty($error_messages))
 				{
 					$validateResult['error_total'] ++;
@@ -157,7 +157,6 @@ abstract class LtAction
 		}
 		return $validateResult;
 	}
-
 	/**
 	 * Check if current user have privilege to do this
 	 * 
