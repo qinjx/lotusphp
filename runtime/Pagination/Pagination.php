@@ -73,6 +73,8 @@ class LtPagination
 			$this->confGroup['default']['link_tag_close'] = '</a>';
 			$this->confGroup['default']['link_tag_cur_open'] = '<strong>';
 			$this->confGroup['default']['link_tag_cur_close'] = '</strong>';
+			$this->confGroup['default']['button_tag_prev_open'] = '<a href=":url">';
+			$this->confGroup['default']['button_tag_next_open'] = '<a href=":url">';
 			$this->confGroup['default']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
 			$this->confGroup['default']['button_tag_close'] = '</a>';
 			$this->confGroup['default']['button_tag_empty_open'] = '<span>';
@@ -95,7 +97,7 @@ class LtPagination
 	{
 		$this->confGroup[$pagername]? $this->conf = $this->confGroup[$pagername] : $this->conf = $this->confGroup['default'];
 	}
-	/**
+/**
 	 * 输出html格式分布代码
 	 * @param int $page 当前页
 	 * @param int $count 总数，例如你查询数据库得到的数据总量
@@ -107,13 +109,13 @@ class LtPagination
 		$per_page = empty($this->conf['per_page']) ? 25 : $this->conf['per_page'];
 		$pagecount = ceil($count / $per_page);
 		$pager = $this->renderPager($page, $pagecount, $url);
-		if ($this->conf['show_goto'])
-		{
-			$pager .= $this->renderButton('goto', $page, $pagecount, $url);
-		}
 		if ($this->conf['show_info'])
 		{
 			$pager .= $this->renderButton('info', $page, $pagecount, $url);
+		}
+		if ($this->conf['show_goto'])
+		{
+			$pager .= $this->renderButton('goto', $page, $pagecount, $url);
 		}
 		return $this->conf['full_tag_open'] . $pager . $this->conf['full_tag_close'];
 	}
@@ -227,12 +229,12 @@ class LtPagination
 		$destPage = 1;
 		if ('goto' == $buttonLabel)
 		{
-			$button = "goto <input type=\"text\" size=\"3\" onkeydown=\"javascript: if(event.keyCode==13){ location='{$baseurl}'.replace(':page',this.value);return false;}\" />";
+			$button = "<span class='ui-paging-which'><input id=\"p\" type=\"text\" size=\"3\" onkeydown=\"javascript: if(event.keyCode==13){ location='{$baseurl}'.replace(':page',this.value);return false;}\" /></span><a class='ui-paging-info ui-paging-goto' href='#' id='goto'>跳转</a>";
 			return $button;
 		}
 		if ('info' == $buttonLabel)
 		{
-			$button = " $pagenumber/$pagecount ";
+			$button = "<span class='ui-paging-info'><span class='ui-paging-bold'> $pagenumber/$pagecount </span>页</span>";
 			return $button;
 		}
 		switch ($buttonLabel)
@@ -255,23 +257,28 @@ class LtPagination
 				break;
 		}
 		$url = str_replace(':page', $destPage, $baseurl);
-		$button = str_replace(':url', $url, $this->conf['button_tag_open']) . $bottenText . $this->conf['button_tag_close'];
-
-		if ($buttonLabel == "first" || $buttonLabel == "prev")
+		if ($buttonLabel == "prev")
+		{
+			$button = str_replace(':url', $url, $this->conf['button_tag_prev_open']) . $bottenText . $this->conf['button_tag_close'];
+		}
+		else
+		{
+			$button = str_replace(':url', $url, $this->conf['button_tag_next_open']) . $bottenText . $this->conf['button_tag_close'];
+		}
+		if ($buttonLabel == "prev")
 		{
 			if ($pagenumber <= 1)
 			{
-				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
+				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_prev_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
 			}
 		}
 		else
 		{
 			if ($pagenumber >= $pagecount)
 			{
-				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
+				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_next_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
 			}
 		}
 		return $button;
 	}
 }
-

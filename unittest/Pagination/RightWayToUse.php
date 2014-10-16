@@ -54,6 +54,8 @@ class RightWayToUsePagination extends PHPUnit_Framework_TestCase
 		$conf['default']['link_tag_close'] = '</a>';
 		$conf['default']['link_tag_cur_open'] = '<strong>';
 		$conf['default']['link_tag_cur_close'] = '</strong>';
+		$conf['default']['button_tag_prev_open'] = '<a href=":url">';
+		$conf['default']['button_tag_next_open'] = '<a href=":url">';
 		$conf['default']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
 		$conf['default']['button_tag_close'] = '</a>';
 		$conf['default']['button_tag_empty_open'] = '<span>';
@@ -100,6 +102,8 @@ class RightWayToUsePagination extends PHPUnit_Framework_TestCase
 		$conf['example']['link_tag_close'] = '</a>';
 		$conf['example']['link_tag_cur_open'] = '<strong>';
 		$conf['example']['link_tag_cur_close'] = '</strong>';
+		$conf['example']['button_tag_prev_open'] = '<a href=":url">';
+		$conf['example']['button_tag_next_open'] = '<a href=":url">';
 		$conf['example']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
 		$conf['example']['button_tag_close'] = '</a>';
 		$conf['example']['button_tag_empty_open'] = '<span>';

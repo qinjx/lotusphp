@@ -53,10 +53,11 @@ class LtValidator
 	 * @param array $dtd 
 	 * @return array 
 	 */
-	public function validate($value, $dtd)
+	public function validate($dtd)
 	{
 		$errorMessages = array();
 		$label = $dtd->label;
+		$value = $dtd->form;
 
 		if (is_array($dtd->rules) && count($dtd->rules))
 		{

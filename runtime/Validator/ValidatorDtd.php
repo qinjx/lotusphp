@@ -3,7 +3,7 @@
  * validatorDtd
  * @author Jianxiang Qin <TalkativeDoggy@gmail.com>
  * @license http://opensource.org/licenses/BSD-3-Clause New BSD License
- * @version svn:$Id: ValidatorDtd.php 964 2012-08-27 04:02:32Z zhao5908@gmail.com $
+ * @version svn:$Id: ValidatorDtd.php 965 2014-09-15 16:21:32 iuyes@qq.com $
  */
 
 /**
@@ -14,6 +14,8 @@
  */
 class LtValidatorDtd
 {
+	/** @var form elements */
+	public $form;
 	/** @var string label */
 	public $label;
 	
@@ -29,8 +31,9 @@ class LtValidatorDtd
 	 * @param array $rules
 	 * @param array|null $messages
 	 */
-	public function __construct($label, $rules, $messages = null)
+	public function __construct($form,$label, $rules, $messages = null)
 	{
+		$this->form = $form;
 		$this->label = $label;
 		foreach($rules as $key => $rule)
 		{
