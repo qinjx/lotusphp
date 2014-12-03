@@ -194,8 +194,8 @@ class LtTemplateView
 		$str = preg_replace("/\{elseif\s+(.+?)\}/", "<?php } elseif (\\1) { ?>", $str);
 		$str = preg_replace("/\{\/if\}/", "<?php } ?>", $str); 
 		// loop
-		$str = preg_replace("/\{loop\s+(\S+)\s+(\S+)\}/e", "\$this->addquote('<?php if(isset(\\1) && is_array(\\1)) foreach(\\1 as \\2) { ?>')", $str);
-		$str = preg_replace("/\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}/e", "\$this->addquote('<?php if(isset(\\1) && is_array(\\1)) foreach(\\1 as \\2=>\\3) { ?>')", $str);
+		$str = preg_replace_callback("/\{loop\s+(\S+)\s+(\S+)\}/", array($this, "parseLoopOne"), $str);
+		$str = preg_replace_callback("/\{loop\s+(\S+)\s+(\S+)\s+(\S+)\}/", array($this, "parseLoopTwo"), $str);
 		$str = preg_replace("/\{\/loop\}/", "<?php } ?>", $str); 
 		// url生成
 		$str = preg_replace("/\{url\(([^}]+)\)\}/", "<?php echo LtObjectUtil::singleton('LtUrl')->generate(\\1);?>", $str);
@@ -211,14 +211,14 @@ class LtTemplateView
 		 */
 		// 其它变量
 		$str = preg_replace("/\{(\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}/", "<?php echo \\1;?>", $str);
-		$str = preg_replace("/\{(\\$[a-zA-Z0-9_\.\[\]\'\"\$\x7f-\xff]+)\}/e", "\$this->addquote('<?php echo \\1;?>')", $str); 
+		$str = preg_replace_callback("/\{(\\$[a-zA-Z0-9_\.\[\]\'\"\$\x7f-\xff]+)\}/", array($this, "parseValue"), $str);
 		// 类->属性  类->方法
-		$str = preg_replace("/\{(\\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff][+\-\>\$\'\"\,\[\]\(\)a-zA-Z0-9_\x7f-\xff]+)\}/es", "\$this->addquote('<?php echo \\1;?>')", $str); 
+		$str = preg_replace_callback("/\{(\\\$[a-zA-Z0-9_\[\]\'\"\$\x7f-\xff][+\-\>\$\'\"\,\[\]\(\)a-zA-Z0-9_\x7f-\xff]+)\}/s", array($this, "parseClassValue"), $str);
 		// 常量
 		$str = preg_replace("/\{([A-Z_\x7f-\xff][A-Z0-9_\x7f-\xff]*)\}/", "<?php echo \\1;?>", $str); 
 		// 静态变量
 		$str = preg_replace("/\{([a-zA-Z0-9_]*::?\\\$[a-zA-Z_\x7f-\xff][a-zA-Z0-9_\x7f-\xff]*)\}/", "<?php echo \\1;?>", $str);
-		$str = preg_replace("/\{([a-zA-Z0-9_]*::?\\\$[a-zA-Z0-9_\.\[\]\'\"\$\x7f-\xff]+)\}/e", "\$this->addquote('<?php echo \\1;?>')", $str); 
+		$str = preg_replace_callback("/\{([a-zA-Z0-9_]*::?\\\$[a-zA-Z0-9_\.\[\]\'\"\$\x7f-\xff]+)\}/", array($this, "parseStaticValue"), $str);
 
 		// 合并相邻php标记
 		$str = preg_replace("/\?\>\s*\<\?php[\r\n\t ]*/", "", $str);
@@ -241,6 +241,32 @@ class LtTemplateView
 		$str = trim($str);
 		return $str;
 	}
+
+    protected function parseLoopOne($matches)
+    {
+        return $this->addquote('<?php if(isset(' . $matches[1] . ') && is_array(' . $matches[1] . ')) foreach(' . $matches[1] . ' as ' . $matches[2] . ') { ?>');
+    }
+
+    protected function parseLoopTwo($matches)
+    {
+        return $this->addquote('<?php if(isset(' . $matches[1] . ') && is_array(' . $matches[1] . ')) foreach(' . $matches[1] . ' as ' . $matches[2] . '=>' . $matches[3] . ') { ?>');
+    }
+
+    protected function parseValue($matches)
+    {
+        return $this->addquote('<?php echo ' . $matches[1] . ';?>');
+    }
+
+    protected function parseClassValue($matches)
+    {
+        return $this->addquote('<?php echo ' . $matches[1] . ';?>');
+    }
+
+    protected function parseStaticValue($matches)
+    {
+        return $this->addquote('<?php echo ' . $matches[1] . ';?>');
+    }
+
 	/**
 	 * 变量加上单引号 
 	 * 如果是数字就不加单引号, 如果已经加上单引号或者双引号保持不变
