@@ -105,7 +105,7 @@ class LtDbSqlAdapterMysql implements LtDbSqlAdapter
 	
 	/**
 	 * get schemas
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getSchemas($queryResult)
 	{
@@ -114,7 +114,7 @@ class LtDbSqlAdapterMysql implements LtDbSqlAdapter
 	
 	/**
 	 * get tables
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getTables($queryResult)
 	{
@@ -128,8 +128,9 @@ class LtDbSqlAdapterMysql implements LtDbSqlAdapter
 	 */
 	public function getFields($queryResult)
 	{
-		foreach ($queryResult as $key => $value)
-		{
+		$fields = array();
+        foreach ($queryResult as $value)
+        {
 			$fields[$value['Field']]['name'] = $value['Field'];
 			$fields[$value['Field']]['type'] = $value['Type'];
 			/*

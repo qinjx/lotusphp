@@ -23,8 +23,8 @@ class LtDbSqlMapClient
 
 	/**
 	 * execute
-	 * @param type $mapId
-	 * @param type $bind
+	 * @param string $mapId
+	 * @param array $bind
 	 * @return boolean|array|int|object
 	 */
 	public function execute($mapId, $bind = null)

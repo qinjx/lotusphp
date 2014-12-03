@@ -27,8 +27,7 @@ class LtCache
 	protected $ch;
 
 	/**
-	 * construct
-	 * @return void 
+	 * constructor
 	 */
 	public function __construct()
 	{
@@ -78,7 +77,7 @@ class LtCache
 	public function changeNode($node)
 	{
 		$this->node = $node;
-		$this->dbh->node = $node;
+		$this->ch->node = $node;
 	}
 
 	/**

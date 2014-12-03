@@ -27,7 +27,7 @@ class LtDbAdapterFactory
 
 	/**
 	 * get sql adapter
-	 * @param type $sqlAdapterType
+	 * @param string $sqlAdapterType
 	 * @return \LtDbSqlAdapter
 	 */
 	public function getSqlAdapter($sqlAdapterType)

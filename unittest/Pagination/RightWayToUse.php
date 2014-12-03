@@ -18,48 +18,99 @@ class RightWayToUsePagination extends PHPUnit_Framework_TestCase
 		$pagination = new LtPagination;
 
 		/**
-		 * 基本配置
+		 * 基本配置，默认分页样式
 		 */
-		$conf['per_page'] = 25; //每个页面中希望展示的项目数量 
-		$conf['num_links_show'] = 9; //数字链接显示数量 
-		$conf['num_point_start_end'] = 2; //“点”前边和后边的链接数量
+		$conf['default']['per_page'] = 25; //每个页面中希望展示的项目数量 
+		$conf['default']['num_links_show'] = 9; //数字链接显示数量 
+		$conf['default']['num_point_start_end'] = 2; //“点”前边和后边的链接数量
 		
 		/**
 		 * 是否显示上一页,下一页...
 		 */
-		$conf['show_first'] = true;
-		$conf['show_prev'] = true;
-		$conf['show_next'] = true;
-		$conf['show_last'] = true;
-		$conf['show_goto'] = false;
-		$conf['show_info'] = false;
-		$conf['show_point'] = true;
-		$conf['show_empty_button'] = false;
+		$conf['default']['show_first'] = true;
+		$conf['default']['show_prev'] = true;
+		$conf['default']['show_next'] = true;
+		$conf['default']['show_last'] = true;
+		$conf['default']['show_goto'] = false;
+		$conf['default']['show_info'] = false;
+		$conf['default']['show_point'] = true;
+		$conf['default']['show_empty_button'] = false;
 		/**
 		 * 上一页,下一页...的显示文字内容
 		 */
-		$conf['first_text'] = 'First';
-		$conf['prev_text'] = 'Prev';
-		$conf['next_text'] = 'Next';
-		$conf['last_text'] = 'Last';
-		$conf['point_text'] = '...';
+		$conf['default']['first_text'] = 'First';
+		$conf['default']['prev_text'] = 'Prev';
+		$conf['default']['next_text'] = 'Next';
+		$conf['default']['last_text'] = 'Last';
+		$conf['default']['point_text'] = '...';
 		/**
 		 * 生成html代码部分, :url表示生成链接
 		 */
-		$conf['full_tag_open'] = '<div class="pages">';
-		$conf['full_tag_close'] = '</div>';
-		$conf['num_tag_open'] = '';
-		$conf['num_tag_close'] = '';
-		$conf['link_tag_open'] = '<a href=":url">';
-		$conf['link_tag_close'] = '</a>';
-		$conf['link_tag_cur_open'] = '<strong>';
-		$conf['link_tag_cur_close'] = '</strong>';
-		$conf['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
-		$conf['button_tag_close'] = '</a>';
-		$conf['button_tag_empty_open'] = '<span>';
-		$conf['button_tag_empty_close'] = '</span>';
-		$conf['point_tag_open'] = '<span>';
-		$conf['point_tag_close'] = '</span>';
+		$conf['default']['full_tag_open'] = '<div class="pages">';
+		$conf['default']['full_tag_close'] = '</div>';
+		$conf['default']['num_tag_open'] = '';
+		$conf['default']['num_tag_close'] = '';
+		$conf['default']['link_tag_open'] = '<a href=":url">';
+		$conf['default']['link_tag_close'] = '</a>';
+		$conf['default']['link_tag_cur_open'] = '<strong>';
+		$conf['default']['link_tag_cur_close'] = '</strong>';
+		$conf['default']['button_tag_prev_open'] = '<a href=":url">';
+		$conf['default']['button_tag_next_open'] = '<a href=":url">';
+		$conf['default']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
+		$conf['default']['button_tag_close'] = '</a>';
+		$conf['default']['button_tag_empty_open'] = '<span>';
+		$conf['default']['button_tag_empty_close'] = '</span>';
+		$conf['default']['point_tag_open'] = '<span>';
+		$conf['default']['point_tag_close'] = '</span>';
+		
+		
+		/**
+		 * 分页样式2
+		 */
+		 
+		$conf['example']['per_page'] = 25; //每个页面中希望展示的项目数量 
+		$conf['example']['num_links_show'] = 9; //数字链接显示数量 
+		$conf['example']['num_point_start_end'] = 2; //“点”前边和后边的链接数量
+		
+		/**
+		 * 是否显示上一页,下一页...
+		 */
+		$conf['example']['show_first'] = true;
+		$conf['example']['show_prev'] = true;
+		$conf['example']['show_next'] = true;
+		$conf['example']['show_last'] = true;
+		$conf['example']['show_goto'] = false;
+		$conf['example']['show_info'] = false;
+		$conf['example']['show_point'] = true;
+		$conf['example']['show_empty_button'] = false;
+		/**
+		 * 上一页,下一页...的显示文字内容
+		 */
+		$conf['example']['first_text'] = 'First';
+		$conf['example']['prev_text'] = 'Prev';
+		$conf['example']['next_text'] = 'Next';
+		$conf['example']['last_text'] = 'Last';
+		$conf['example']['point_text'] = '...';
+		/**
+		 * 生成html代码部分, :url表示生成链接
+		 */
+		$conf['example']['full_tag_open'] = '<div class="pages">';
+		$conf['example']['full_tag_close'] = '</div>';
+		$conf['example']['num_tag_open'] = '';
+		$conf['example']['num_tag_close'] = '';
+		$conf['example']['link_tag_open'] = '<a href=":url">';
+		$conf['example']['link_tag_close'] = '</a>';
+		$conf['example']['link_tag_cur_open'] = '<strong>';
+		$conf['example']['link_tag_cur_close'] = '</strong>';
+		$conf['example']['button_tag_prev_open'] = '<a href=":url">';
+		$conf['example']['button_tag_next_open'] = '<a href=":url">';
+		$conf['example']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
+		$conf['example']['button_tag_close'] = '</a>';
+		$conf['example']['button_tag_empty_open'] = '<span>';
+		$conf['example']['button_tag_empty_close'] = '</span>';
+		$conf['example']['point_tag_open'] = '<span>';
+		$conf['example']['point_tag_close'] = '</span>';
+		
 		/**
 		 * 配置保存在文件中, 生产环境下自动从缓存读取配置, 不需要下一行代码
 		 */
@@ -67,7 +118,13 @@ class RightWayToUsePagination extends PHPUnit_Framework_TestCase
 		/**
 		 * 初始化
 		 */
+		 
 		$pagination->init();
+		
+		/**
+		 * 切换分页样式,如果是调用默认分页样式，这句可以不加
+		 */
+		$pagination->setPager('example');
 		/**
 		 * 显示第一页, 共1000条, 
 		 * 每页显示多少条使用配置文件, 

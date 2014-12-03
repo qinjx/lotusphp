@@ -19,6 +19,7 @@ class LtPagination
 	
 	/** @var array config */
 	public $conf;
+	public $confGroup;
 
 	/**
 	 * construct
@@ -43,45 +44,60 @@ class LtPagination
 	 */
 	public function init()
 	{
-		$this->conf = $this->configHandle->get("pagination.pager");
-		if (empty($this->conf))
+		$this->confGroup = $this->configHandle->get("pagination.pager");
+		if (empty($this->confGroup['default']))
 		{
-			$this->conf['per_page'] = 25; //每个页面中希望展示的项目数量 
-			$this->conf['num_links_show'] = 9; //数字链接显示数量 
-			$this->conf['num_point_start_end'] = 2; //“点”前边和后边的链接数量
-			$this->conf['show_first'] = true;
-			$this->conf['show_prev'] = true;
-			$this->conf['show_next'] = true;
-			$this->conf['show_last'] = true;
-			$this->conf['show_goto'] = false;
-			$this->conf['show_info'] = false;
-			$this->conf['show_point'] = true;
-			$this->conf['show_empty_button'] = false;
+			$this->confGroup['default']['per_page'] = 25; //每个页面中希望展示的项目数量 
+			$this->confGroup['default']['num_links_show'] = 9; //数字链接显示数量 
+			$this->confGroup['default']['num_point_start_end'] = 2; //“点”前边和后边的链接数量
+			$this->confGroup['default']['show_first'] = true;
+			$this->confGroup['default']['show_prev'] = true;
+			$this->confGroup['default']['show_next'] = true;
+			$this->confGroup['default']['show_last'] = true;
+			$this->confGroup['default']['show_goto'] = false;
+			$this->confGroup['default']['show_info'] = false;
+			$this->confGroup['default']['show_point'] = true;
+			$this->confGroup['default']['show_empty_button'] = false;
 
-			$this->conf['first_text'] = 'First';
-			$this->conf['prev_text'] = 'Prev';
-			$this->conf['next_text'] = 'Next';
-			$this->conf['last_text'] = 'Last';
-			$this->conf['point_text'] = '...';
+			$this->confGroup['default']['first_text'] = 'First';
+			$this->confGroup['default']['prev_text'] = 'Prev';
+			$this->confGroup['default']['next_text'] = 'Next';
+			$this->confGroup['default']['last_text'] = 'Last';
+			$this->confGroup['default']['point_text'] = '...';
 
-			$this->conf['full_tag_open'] = '<div class="pages">';
-			$this->conf['full_tag_close'] = '</div>';
-			$this->conf['num_tag_open'] = '';
-			$this->conf['num_tag_close'] = '';
-			$this->conf['link_tag_open'] = '<a href=":url">';
-			$this->conf['link_tag_close'] = '</a>';
-			$this->conf['link_tag_cur_open'] = '<strong>';
-			$this->conf['link_tag_cur_close'] = '</strong>';
-			$this->conf['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
-			$this->conf['button_tag_close'] = '</a>';
-			$this->conf['button_tag_empty_open'] = '<span>';
-			$this->conf['button_tag_empty_close'] = '</span>';
-			$this->conf['point_tag_open'] = '<span>';
-			$this->conf['point_tag_close'] = '</span>';
+			$this->confGroup['default']['full_tag_open'] = '<div class="pages">';
+			$this->confGroup['default']['full_tag_close'] = '</div>';
+			$this->confGroup['default']['num_tag_open'] = '';
+			$this->confGroup['default']['num_tag_close'] = '';
+			$this->confGroup['default']['link_tag_open'] = '<a href=":url">';
+			$this->confGroup['default']['link_tag_close'] = '</a>';
+			$this->confGroup['default']['link_tag_cur_open'] = '<strong>';
+			$this->confGroup['default']['link_tag_cur_close'] = '</strong>';
+			$this->confGroup['default']['button_tag_prev_open'] = '<a href=":url">';
+			$this->confGroup['default']['button_tag_next_open'] = '<a href=":url">';
+			$this->confGroup['default']['button_tag_open'] = '<a href=":url" style="font-weight:bold">';
+			$this->confGroup['default']['button_tag_close'] = '</a>';
+			$this->confGroup['default']['button_tag_empty_open'] = '<span>';
+			$this->confGroup['default']['button_tag_empty_close'] = '</span>';
+			$this->confGroup['default']['point_tag_open'] = '<span>';
+			$this->confGroup['default']['point_tag_close'] = '</span>';
+			
+			$this->conf = $this->confGroup['default'];
+		}
+		else
+		{
+			$this->conf = $this->confGroup['default'];
 		}
 	}
-
 	/**
+	 * 切换分页样式
+	 * @param string $pagername 确保分页样式定义存在，不存在将调用默认样式输出分页
+	 */
+	public function setPager($pagername)
+	{
+		$this->confGroup[$pagername]? $this->conf = $this->confGroup[$pagername] : $this->conf = $this->confGroup['default'];
+	}
+/**
 	 * 输出html格式分布代码
 	 * @param int $page 当前页
 	 * @param int $count 总数，例如你查询数据库得到的数据总量
@@ -93,13 +109,13 @@ class LtPagination
 		$per_page = empty($this->conf['per_page']) ? 25 : $this->conf['per_page'];
 		$pagecount = ceil($count / $per_page);
 		$pager = $this->renderPager($page, $pagecount, $url);
-		if ($this->conf['show_goto'])
-		{
-			$pager .= $this->renderButton('goto', $page, $pagecount, $url);
-		}
 		if ($this->conf['show_info'])
 		{
 			$pager .= $this->renderButton('info', $page, $pagecount, $url);
+		}
+		if ($this->conf['show_goto'])
+		{
+			$pager .= $this->renderButton('goto', $page, $pagecount, $url);
 		}
 		return $this->conf['full_tag_open'] . $pager . $this->conf['full_tag_close'];
 	}
@@ -205,7 +221,7 @@ class LtPagination
 	 * @param string $buttonLabel 显示文字
 	 * @param int $pagenumber 当前页
 	 * @param int $pagecount 总页数
-	 * @param type $baseurl
+	 * @param string $baseurl
 	 * @return string
 	 */
 	public function renderButton($buttonLabel, $pagenumber, $pagecount, $baseurl = '?page=:page')
@@ -213,12 +229,12 @@ class LtPagination
 		$destPage = 1;
 		if ('goto' == $buttonLabel)
 		{
-			$button = "goto <input type=\"text\" size=\"3\" onkeydown=\"javascript: if(event.keyCode==13){ location='{$baseurl}'.replace(':page',this.value);return false;}\" />";
+			$button = "<span class='ui-paging-which'><input id=\"p\" type=\"text\" size=\"3\" onkeydown=\"javascript: if(event.keyCode==13){ location='{$baseurl}'.replace(':page',this.value);return false;}\" /></span><a class='ui-paging-info ui-paging-goto' href='#' id='goto'>跳转</a>";
 			return $button;
 		}
 		if ('info' == $buttonLabel)
 		{
-			$button = " $pagenumber/$pagecount ";
+			$button = "<span class='ui-paging-info'><span class='ui-paging-bold'> $pagenumber/$pagecount </span>页</span>";
 			return $button;
 		}
 		switch ($buttonLabel)
@@ -241,20 +257,26 @@ class LtPagination
 				break;
 		}
 		$url = str_replace(':page', $destPage, $baseurl);
-		$button = str_replace(':url', $url, $this->conf['button_tag_open']) . $bottenText . $this->conf['button_tag_close'];
-
-		if ($buttonLabel == "first" || $buttonLabel == "prev")
+		if ($buttonLabel == "prev")
+		{
+			$button = str_replace(':url', $url, $this->conf['button_tag_prev_open']) . $bottenText . $this->conf['button_tag_close'];
+		}
+		else
+		{
+			$button = str_replace(':url', $url, $this->conf['button_tag_next_open']) . $bottenText . $this->conf['button_tag_close'];
+		}
+		if ($buttonLabel == "prev")
 		{
 			if ($pagenumber <= 1)
 			{
-				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
+				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_prev_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
 			}
 		}
 		else
 		{
 			if ($pagenumber >= $pagecount)
 			{
-				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
+				$button = $this->conf['show_empty_button'] ? $this->conf['button_tag_empty_next_open'] . $bottenText . $this->conf['button_tag_empty_close'] : '';
 			}
 		}
 		return $button;

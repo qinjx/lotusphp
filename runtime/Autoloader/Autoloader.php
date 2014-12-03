@@ -48,7 +48,7 @@ class LtAutoloader
 	 * 若该属性设置为array(".svn", ".setting")，
 	 * 则所有名为".setting"的目录也会被忽略
 	 */
-	public $skipDirNames = array('.svn', '.git');
+	public $skipDirNames = array('.svn', '.git', '.DS_Store');
 
 	/** @var LtStoreFile 存储句柄默认使用 @link LtStoreFile */
 	public $storeHandle;
@@ -141,6 +141,7 @@ class LtAutoloader
     {
         $this->persistentStoreHandle = new LtStoreFile;
         $this->persistentStoreHandle->prefix = 'Lt-parsed-token-' . $this->storeNameSpaceId;
+        $this->persistentStoreHandle->init();
     }
 
 	/**
@@ -398,13 +399,14 @@ class LtAutoloader
         {//init()会调用这个方法, 不要将这个判断移动到scanDir()中
             return false;
         }
+        $sourceContent = file_get_contents($filePath);
         $fileSize = filesize($filePath);
-        $fileChecksum = crc32($filePath);
+        $fileChecksum = crc32($sourceContent);
 
         $savedFileInfo = $this->persistentStoreHandle->get($filePath);
 		if (!isset($savedFileInfo['file_size']) || $savedFileInfo['file_size'] != $fileSize || $savedFileInfo['file_checksum'] != $fileChecksum)
 		{
-            if($libNames = $this->parseLibNames(file_get_contents($filePath)))
+            if($libNames = $this->parseLibNames($sourceContent))
             {
                 $newFileInfo = array('file_size' => $fileSize, 'file_checksum' => $fileChecksum, 'lib_names' => $libNames);
                 if (isset($savedFileInfo['file_size']))
@@ -418,7 +420,10 @@ class LtAutoloader
             }
 			else
             {
-                trigger_error("Can't find any class/function in file: $filePath");
+                /*
+                 * Can't find any class/function in file: $filePath
+                 * But, don't send error message, this should be done by PHP Code Sniffer
+                 */
             }
 		}
         else

@@ -81,7 +81,7 @@ class Lotus
 			if (isset($this->option["app_name"]) && !empty($this->option["app_name"]))
 			{
 				$this->app_dir = $this->proj_dir . "app/" . $this->option["app_name"] . "/";
-				$this->cache_dir = $this->proj_dir . "cache/";
+				$this->cache_dir = sys_get_temp_dir() . "/cache/";
 				$underMVC = true;
 			}
 			else
@@ -100,6 +100,7 @@ class Lotus
 		if (!empty($this->defaultStoreDir))
 		{
 			$this->cache_dir = $this->defaultStoreDir;
+            $this->cache_dir = rtrim($this->cache_dir, '\\/') . '/';
 		}
 
 		/**
@@ -146,9 +147,13 @@ class Lotus
 		}
 		if ($this->proj_dir)
 		{
-			is_dir($this->proj_dir . 'lib') && $autoloader->autoloadPath[] = $this->proj_dir . 'lib';
-			is_dir($this->app_dir . 'action') && $autoloader->autoloadPath[] = $this->app_dir . 'action';
-			is_dir($this->app_dir . 'lib') && $autoloader->autoloadPath[] = $this->app_dir . 'lib';
+            foreach(array($this->proj_dir . 'lib', $this->app_dir . 'action', $this->app_dir . 'lib') as $dir)
+            {
+                if (is_dir($dir))
+                {
+                    $autoloader->autoloadPath[] = $dir;
+                }
+            }
 		}
 
 		$autoloader->storeHandle = clone $this->coreCacheHandle;
@@ -159,6 +164,9 @@ class Lotus
 
 	/**
 	 * prepare config
+     * @todo 先加载proj/conf下的配置，再加载app/conf下的配置，并自动覆盖重复项
+     * 注意避开array_merge的坑
+     * 或者，至少做个判断，app/conf不存在，去找proj/conf，不能不加载配置文件
 	 */
 	protected function prepareConfig()
 	{

@@ -11,7 +11,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 		$username = '123fuck 4567890';
 		$password = '123fuck 4567890';
 
-		$dtds['username'] = new LtValidatorDtd("username",
+		$dtds['username'] = new LtValidatorDtd($_POST['username'],"username",
 			array("max_length" => 8,
 				"mask" => "/^[a-z0-9]+$/i",
 				"ban" => "/fuck/",
@@ -23,7 +23,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 				)
 			);
 
-		$dtds['password'] = new LtValidatorDtd("password",
+		$dtds['password'] = new LtValidatorDtd($_POST['password'],"password",
 			array("max_length" => 8,
 				"mask" => "/^[a-z0-9]+$/i",
 				"ban" => "/fuck/",
@@ -63,7 +63,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 				$dtd->rules[$ruleKey] = $_ruleValue;
 			}
 		}
-		$error_messages = $validator->validate($username, $dtd);
+		$error_messages = $validator->validate($dtd);
 		$this->assertEquals(
 			array('max_length' => 'username is longer than 8',
 				'mask' => '用户名只能由数字或字组成',
@@ -79,7 +79,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 				$dtd->rules[$ruleKey] = $_ruleValue;
 			}
 		}
-		$error_messages = $validator->validate($password, $dtd);
+		$error_messages = $validator->validate($dtd);
 		$this->assertEquals(
 			array('max_length' => '密码最长8位',
 				'mask' => '密码只能由数字或字组成',

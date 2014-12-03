@@ -11,6 +11,7 @@
  * @author Yi Zhao <zhao5908@gmail.com>
  * @category runtime
  * @package   Lotusphp\RBAC
+ * @todo init()时转换数组，checkAcl()时使用isset()代替in_array()提升性能
  */
 class LtRbac {
 
@@ -48,7 +49,7 @@ class LtRbac {
 
 	/**
 	 * check acl
-	 * @param string $roles
+	 * @param array $roles
 	 * @param string $resource
 	 * @return boolean
 	 */
@@ -60,14 +61,15 @@ class LtRbac {
 		{
 			foreach($roles as $role) 
 			{
-				if (isset($this->acl[$operation][$role])) 
+				if (isset($this->acl[$operation][$role]))
 				{
 					// everyone *
-					if (in_array($resource, $this->acl[$operation]['*'])) 
+					if (isset($this->acl[$operation]['*']) && in_array($resource, $this->acl[$operation]['*']))
 					{
 						$allow = "allow" == $operation ? true : false;
 						break;
-					} 
+					}
+
 					if (in_array($resource, $this->acl[$operation][$role])) 
 					{
 						$allow = "allow" == $operation ? true : false;
@@ -75,17 +77,17 @@ class LtRbac {
 					}
 					else 
 					{
-						$res = explode('/', trim($resource, '/'));
-						for ($i = count($res)-1; $i >= 0; $i--) 
+                        /**
+                         * to check if [module / *] or [* / action] or [* / *] is allowed
+                         */
+                        $tmpArray = explode('/', trim($resource, '/'));
+                        foreach (array($tmpArray[0] . "/*", "*/" . $tmpArray[1], "*/*") as $tmp)
 						{
-							$res[$i] = '*';
-							$tmp = implode('/', $res);
 							if (in_array($tmp, $this->acl[$operation][$role])) 
 							{
 								$allow = "allow" == $operation ? true : false;
 								break;
 							}
-							unset($res[$i]);
 						}
 					}
 				}
@@ -93,22 +95,4 @@ class LtRbac {
 		}
 		return $allow;
 	}
-/*
-	private function __set($p,$v)
-	{
-		$this->$p = $v;
-	}
-
-	private function __get($p)
-	{
-		if(isset($this->$p))
-		{
-			return($this->$p);
-		}
-		else
-		{
-			return(NULL);
-		}
-	}
-*/
 }

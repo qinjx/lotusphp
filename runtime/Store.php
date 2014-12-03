@@ -36,6 +36,7 @@ Interface LtStore
 	/**
 	 * get
 	 * @param string $key
+	 * @return mixed | null
 	 */
 	public function get($key);
 

@@ -8,7 +8,7 @@
  */
 
 /**
- * LtDbTableDataGaateway
+ * LtDbTableDataGateway
  * @author Jianxiang Qin <TalkativeDoggy@gmail.com>
  * @category runtime
  * @package   Lotusphp\DB\QueryEngine
@@ -44,61 +44,63 @@ class LtDbTableDataGateway
 	/**
 	 * Build table's field list
 	 * 
-	 * @return array 
+	 * @return void
 	 */
 	protected function buildFieldList()
 	{
-		if (!empty($this->fields))
+		if (empty($this->fields))
 		{
-			return true;
-		}
-		$servers = $this->configHandle->get('db.servers');
-		$group = $this->dbh->group;
-		$node = $this->dbh->node;
-		$role = $this->dbh->role;
-		$table = $this->tableName;
-		$host = key($servers[$group][$node][$role]);
-		$key = md5($group . $node . $role . $table . $host . $table);
-		if (!$value = $this->configHandle->get($key))
-		{
-			$sql = $this->dbh->sqlAdapter->showFields($this->tableName);
-			$rs = $this->dbh->query($sql);
-			$this->fields = $this->dbh->sqlAdapter->getFields($rs);
-			foreach ($this->fields as $field)
-			{
-				if ($field['primary'] == 1)
-				{
-					$this->primaryKey = $field['name'];
-					break;
-				}
-			}
+            $servers = $this->configHandle->get('db.servers');
+            $group = $this->dbh->group;
+            $node = $this->dbh->node;
+            $role = $this->dbh->role;
+            $table = $this->tableName;
+            $host = key($servers[$group][$node][$role]);
+            $key = md5($group . $node . $role . $table . $host . $table);
+            if (!$value = $this->configHandle->get($key))
+            {
+                $sql = $this->dbh->sqlAdapter->showFields($this->tableName);
+                $rs = $this->dbh->query($sql);
+                $this->fields = $this->dbh->sqlAdapter->getFields($rs);
+                foreach ($this->fields as $field)
+                {
+                    if ($field['primary'] == 1)
+                    {
+                        $this->primaryKey = $field['name'];
+                        break;
+                    }
+                }
 
-			$value['fields'] = $this->fields;
-			$value['primaryKey'] = $this->primaryKey;
-			$this->configHandle->addConfig(array($key => $value));
-		}
-		else
-		{
-			$this->fields = $value['fields'];
-			$this->primaryKey = $value['primaryKey'];
-		}
+                $value['fields'] = $this->fields;
+                $value['primaryKey'] = $this->primaryKey;
+                $this->configHandle->addConfig(array($key => $value));
+            }
+            else
+            {
+                $this->fields = $value['fields'];
+                $this->primaryKey = $value['primaryKey'];
+            }
+        }
 	}
 
 	/**
 	 * A shortcut to SELECT COUNT(*) FROM table WHERE condition
 	 * 
-	 * @param array $args 
+	 * @param array $args
+     * @param boolean $useSlave
 	 * @return integer 
 	 * @example count(array('expression' => 'id < :id', 'value' => array('id' => 10)));
 	 */
-	public function count($args = null)
+	public function count($args = null, $useSlave=true)
 	{
-		$selectTemplate = 'SELECT COUNT(*) AS total FROM %s%s';
+		$countKey = isset($args['groupby']) ? 'DISTINCT ' . $args['groupby'] : '*';
+		$selectTemplate = 'SELECT COUNT(' . $countKey . ') AS total FROM %s%s';
 		$where = isset($args['where']['expression']) ? ' WHERE ' . $args['where']['expression'] : '';
 		$bind = isset($args['where']['value']) ? $args['where']['value'] : array();
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
 		$sql = sprintf($selectTemplate, $this->tableName, $join . $where);
-		$queryResult = $this->dbh->query($sql, $bind);
+        $forceUseMaster = !$useSlave;
+		$queryResult = $this->dbh->query($sql, $bind, $forceUseMaster);
 		return $queryResult[0]['total'];
 	}
 
@@ -172,13 +174,15 @@ class LtDbTableDataGateway
 		$join = isset($args['join']) ? ' ' . $args['join'] : '';
 		$orderby = isset($args['orderby']) ? ' ORDER BY ' . $args['orderby'] : '';
 		$groupby = isset($args['groupby']) ? ' GROUP BY ' . $args['groupby'] : '';
-		$sql = sprintf($selectTemplate, $fields, $this->tableName, $join . $where . $groupby . $orderby);
+		$table = isset($args['table']) ? $args['table'] : $this->tableName;
+		$sql = sprintf($selectTemplate, $fields, $table, $join . $where . $groupby . $orderby);
 		if (isset($args['limit']))
 		{
 			$offset = isset($args['offset']) ? $args['offset'] : 0;
 			$sql = $sql . ' ' . $this->dbh->sqlAdapter->limit($args['limit'], $offset);
 		}
-		return $this->dbh->query($sql, $bind);
+        $forceUseMaster = !$useSlave;
+		return $this->dbh->query($sql, $bind, $forceUseMaster);
 	}
 
 	/**
@@ -193,7 +197,8 @@ class LtDbTableDataGateway
 		$this->buildFieldList();
 		$insertTemplate = 'INSERT INTO %s (%s) VALUES (%s)';
 		$fields = array();
-		$placeHolders = array();
+		$placeholders = array();
+        $values = array();
 		foreach ($args as $field => $value)
 		{
 			if (isset($this->fields[$field]))
@@ -257,7 +262,7 @@ class LtDbTableDataGateway
 		{
 			if (isset($this->fields[$field]))
 			{
-				if ($args[$field] instanceof DbExpression)
+				if ($args[$field] instanceof LtDbSqlExpression)
 				{
 					$fields[] = "$field=" . $args[$field]->__toString();
 				}

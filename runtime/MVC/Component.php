@@ -100,57 +100,12 @@ abstract class LtComponent
 	{
 		switch ($this->responseType)
 		{
+			//去除这里的所有方法，因为之前已经将Component模板编译，此处如果再编译，就会造成二次编译
 			case 'json':
-				echo json_encode(array("code" => $this->code,
-						"message" => $this->message,
-						"data" => $this->data
-						));
-				exit;
-				break;
 			case 'tpl':
-				if (null === $this->view)
-				{
-					$this->view = new LtTemplateView;
-				}
-				$this->view->component = true; // 是否组件
-				$this->view->context = $this->context;
-				$this->view->code = $this->code;
-				$this->view->message = $this->message;
-				$this->view->data = $this->data;
-				$this->view->layoutDir = $this->viewDir . "layout/";
-				$this->view->layout = $this->layout;
-				$this->view->templateDir = $this->viewDir . "component/";
-				$this->view->compiledDir = $this->viewTplDir . "component/";
-				$this->view->autoCompile = $this->viewTplAutoCompile;
-				if (empty($this->template))
-				{
-					$this->template = $this->context->uri["module"] . "-" . $this->context->uri["action"];
-				}
-				$this->view->template = $this->template;
-				$this->view->render();
-				break;
-
 			case 'html':
 			case 'wml':
 			default:
-				if (null === $this->view)
-				{
-					$this->view = new LtView;
-				}
-				$this->view->context = $this->context;
-				$this->view->code = $this->code;
-				$this->view->message = $this->message;
-				$this->view->data = $this->data;
-				$this->view->layoutDir = $this->viewDir . "layout/";
-				$this->view->layout = $this->layout;
-				$this->view->templateDir = $this->viewDir . "component/";
-				if (empty($this->template))
-				{
-					$this->template = $this->context->uri["module"] . "-" . $this->context->uri["action"];
-				}
-				$this->view->template = $this->template;
-				$this->view->render();
-				break;
 		}
 	}
 }

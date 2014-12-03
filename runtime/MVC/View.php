@@ -34,6 +34,8 @@ class LtView
 	 */
 	public function render()
 	{
+        $this->layoutDir = rtrim($this->layoutDir, '\\/') . DIRECTORY_SEPARATOR ;
+        $this->templateDir = rtrim($this->templateDir, '\\/') . DIRECTORY_SEPARATOR;
 		if (!empty($this->layout))
 		{
 			include($this->layoutDir . $this->layout . '.php');

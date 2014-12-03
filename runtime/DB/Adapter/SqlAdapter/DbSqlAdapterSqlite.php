@@ -28,7 +28,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * set schema
-	 * @param type $schema
+	 * @param string $schema
 	 * @return string
 	 */
 	public function setSchema($schema)
@@ -65,7 +65,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 
 	/**
 	 * show schemas
-	 * @param type $database
+	 * @param string $database
 	 * @return string
 	 */
 	public function showSchemas($database)
@@ -76,7 +76,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * show tables
-	 * @param type $schema
+	 * @param string $schema
 	 * @return string
 	 */
 	public function showTables($schema)
@@ -109,7 +109,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 
 	/**
 	 * get schemas
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getSchemas($queryResult)
 	{
@@ -118,8 +118,8 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	
 	/**
 	 * get tables
-	 * @param type $queryResult
-	 * @return type
+	 * @param array $queryResult
+	 * @return array
 	 */
 	public function getTables($queryResult)
 	{
@@ -134,7 +134,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 	public function getFields($queryResult)
 	{
 		$fields = array();
-		foreach ($queryResult as $key => $value)
+		foreach ($queryResult as $value)
 		{
 			// 字段名
 			$fields[$value['name']]['name'] = $value['name'];
@@ -166,7 +166,7 @@ class LtDbSqlAdapterSqlite implements LtDbSqlAdapter
 			*/
 			$fields[$value['name']]['notnull'] = (bool) ($value['notnull'] != 0);
 			$fields[$value['name']]['default'] = $value['dflt_value'];
-			$fields[$value['name']]['primary'] = (bool) ($value['pk'] == 1 && strtoupper($fulltype) == 'INTEGER');
+			$fields[$value['name']]['primary'] = (bool) ($value['pk'] == 1 && strtoupper(substr($fulltype, 0, 7)) == 'INTEGER');
 		}
 		return $fields;
 	}

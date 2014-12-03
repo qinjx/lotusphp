@@ -108,12 +108,11 @@ class LtUrl
 	 */
 	public function generate($module, $action, $args = array(), $baseUrl = null, $protocol = null)
 	{
-		if ($baseUrl)
+		if (null === $baseUrl)
 		{
-			$this->baseUrl = $baseUrl;
+            $baseUrl = $this->baseUrl;
 		}
 		$protocol = $protocol ? strtoupper($protocol) : $this->protocol;
-		$url = '';
 		switch ($protocol)
 		{
 			case 'REWRITE':
@@ -145,8 +144,22 @@ class LtUrl
 				$this->postfix = $old_postfix;
 				break;
 		}
-		return $this->baseUrl . $url;
+		return $baseUrl . $url;
 	}
+
+    public function getRootDomain($hostname) {
+        $tokens = explode(".", $hostname);
+        $tokenLen = count($tokens);
+        if (2 < $tokenLen) {
+
+        } else {
+            return null;
+        }
+    }
+
+    public function getAbsoluteUrl($currentUrl, $href) {
+
+    }
 
 	/**
 	 * standard build url

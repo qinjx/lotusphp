@@ -90,12 +90,11 @@ class LtSessionSqlite
 
 	/**
 	 * close
-	 * @return boolean
 	 */
 	public function close()
 	{
 		$this->gc($this->lifeTime);
-		return @sqlite_close($this->dbHandle);
+		sqlite_close($this->dbHandle);
 	}
 
 	/**

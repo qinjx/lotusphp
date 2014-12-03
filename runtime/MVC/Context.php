@@ -17,9 +17,6 @@ class LtContext
 	/** @var array The uri property */
 	public $uri;
 
-	/** @var boolean strip */
-	protected $strip;
-
 	/**
 	 * construct
 	 */

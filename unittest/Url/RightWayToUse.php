@@ -2,6 +2,16 @@
 /**
  * 本测试文档演示了Url的正确使用方法 
  * 按本文档操作一定会得到正确的结果
+ *
+ * 测试URL generating功能
+ *
+ * 测试get root domain功能
+ *  TLD（TOP Level Domain）
+ *      仅root domain @see RightWayToUseUrl::testGetRootDomain2CTLDRootOnly()
+ *      有二级hostname
+ *  ccTLD（Country Code Top Level Domain）
+ *      英文的ccTLD（只有2位的）
+ *      非英文的ccTLD @todo 此种情况不支持
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
 class RightWayToUseUrl extends PHPUnit_Framework_TestCase

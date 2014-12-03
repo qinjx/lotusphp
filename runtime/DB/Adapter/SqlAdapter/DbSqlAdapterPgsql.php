@@ -64,7 +64,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 
 	/**
 	 * show schemas
-	 * @param type $database
+	 * @param string $database
 	 */
 	public function showSchemas($database)
 	{
@@ -125,7 +125,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 
 	/**
 	 * get schemas
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getSchemas($queryResult)
 	{
@@ -134,7 +134,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 	
 	/**
 	 * get tables
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getTables($queryResult)
 	{
@@ -143,7 +143,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 	
 	/**
 	 * get fields
-	 * @param type $queryResult
+	 * @param array $queryResult
 	 */
 	public function getFields($queryResult)
 	{
@@ -152,7 +152,7 @@ class LtDbSqlAdapterPgsql implements LtDbSqlAdapter
 	
 	/**
 	 * detect query type
-	 * @param type $sql
+	 * @param string $sql
 	 */
 	public function detectQueryType($sql)
 	{

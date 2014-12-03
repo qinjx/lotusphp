@@ -20,6 +20,9 @@ class LtCookie
 	/** @var string secret key */
 	private $secretKey;
 
+    /** @var boolean encrypt flag */
+    private $disableEncrypt = false;
+
 	/**
 	 * construct
 	 */
@@ -42,11 +45,15 @@ class LtCookie
 	 * init
 	 */
 	public function init()
-	{ 
-		$this->secretKey = $this->configHandle->get("cookie.secret_key");
-		if(empty($this->secretKey))
-		{
-			trigger_error("cookie.secret_key empty");
+	{
+		if (true == $this->configHandle->get("cookie.disable_encrypt")) {
+			$this->disableEncrypt = true;
+		} else {
+			$this->secretKey = $this->configHandle->get("cookie.secret_key");
+			if (empty($this->secretKey))
+			{
+				trigger_error("cookie.secret_key empty");
+			}
 		}
 	}
 
@@ -58,12 +65,17 @@ class LtCookie
 	 */
 	protected function decrypt($encryptedText)
 	{
-		$key = $this->secretKey;
-		$cryptText = base64_decode($encryptedText);
-		$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-		$iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-		$decryptText = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $cryptText, MCRYPT_MODE_ECB, $iv);
-		return trim($decryptText);
+        if (false == $this->disableEncrypt) {
+            $key = $this->secretKey;
+            $cryptText = base64_decode($encryptedText);
+            $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+            $decryptText = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $cryptText, MCRYPT_MODE_ECB, $iv);
+            return trim($decryptText);
+        } else {
+            return $encryptedText;
+        }
+
 	}
 
 	/**
@@ -74,18 +86,22 @@ class LtCookie
 	 */
 	protected function encrypt($plainText)
 	{
-		$key = $this->secretKey;
-		$ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
-		$iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
-		$encryptText = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $plainText, MCRYPT_MODE_ECB, $iv);
-		return trim(base64_encode($encryptText));
+        if (false == $this->disableEncrypt) {
+            $key = $this->secretKey;
+            $ivSize = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_ECB);
+            $iv = mcrypt_create_iv($ivSize, MCRYPT_RAND);
+            $encryptText = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $plainText, MCRYPT_MODE_ECB, $iv);
+            return trim(base64_encode($encryptText));
+        } else {
+            return $plainText;
+        }
 	}
 
 	/**
 	 * Set cookie value to deleted with $name
 	 * 
 	 * @param string $name
-	 * @param sstring $path
+	 * @param string $path
 	 * @param string $domain
 	 */
 	public function delCookie($name, $path = '/', $domain = null)

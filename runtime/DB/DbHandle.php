@@ -169,7 +169,7 @@ class LtDbHandle
 	 * Generate complete sql from sql template (with placeholder) and parameter
 	 * 
 	 * @param string $sql 
-	 * @param string $parameter 
+	 * @param array $parameter
 	 * @return string 
 	 * @todo 兼容pgsql等其它数据库，pgsql的某些数据类型不接受单引号引起来的值
 	 */
@@ -177,13 +177,19 @@ class LtDbHandle
 	{ 
 		// 注意替换结果尾部加一个空格
 		$sql = preg_replace("/:([a-zA-Z0-9_\-\x7f-\xff][a-zA-Z0-9_\-\x7f-\xff]*)\s*([,\)]?)/", "\x01\x02\x03\\1\x01\x02\x03\\2 ", $sql);
-		foreach($parameter as $key => $value)
+		$replacement = array();
+        $find = array();
+        foreach($parameter as $key => $value)
 		{
 			$find[] = "\x01\x02\x03$key\x01\x02\x03";
 			if ($value instanceof LtDbSqlExpression)
 			{
 				$replacement[] = $value->__toString();
 			}
+            else if (is_null($value))
+            {
+                $replacement[] = 'NULL';
+            }
 			else if (is_string($value))
 			{
 				$replacement[] = "'" . $this->connectionAdapter->escape($value, $this->connectionResource) . "'";

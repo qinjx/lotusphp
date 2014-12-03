@@ -28,7 +28,7 @@ class RightWayToUseStore extends PHPUnit_Framework_TestCase
 		$storeHandle = new LtStoreFile;
 
 		// 2. 设置属性
-		$storeHandle->storeDir = "/tmp/" . uniqid();//不设置也有默认值的，这里只是演示一个三步曲
+		$storeHandle->storeDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid();//不设置也有默认值的，这里只是演示一个三步曲
 
 		// 3. 调用init()方法
 		$storeHandle->init();
