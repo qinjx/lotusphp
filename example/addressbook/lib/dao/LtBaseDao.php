@@ -115,7 +115,7 @@ abstract class LtBaseDao
 	 * 按条件更新
 	 *
 	 * @param array $data
-	 * @example $condition['where'] = array('expression' => 'id < :id', 'value' => array('id' => 10));
+	 * @example $condition = array('expression' => 'id < :id', 'value' => array('id' => 10));
 	 * @param array $condition
 	 */
 	public function updateByCondition($data, $condition)
