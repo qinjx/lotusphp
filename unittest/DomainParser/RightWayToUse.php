@@ -43,6 +43,7 @@ class RightWayToUseDomainParser extends PHPUnit_Framework_TestCase
         $this->assertEquals("www.sh.cn", $dn->getRootDomain("www.sh.cn"));
         $this->assertEquals("www.sh.cn", $dn->getRootDomain("blog.www.sh.cn"));
         $this->assertEquals("z.cn", $dn->getRootDomain("deal.z.cn"));
+        $this->assertEquals("tv.ch", $dn->getRootDomain("tv.ch"));
 	}
 
     public function testGetRootDomainTLDRootOnly() {

@@ -27,6 +27,7 @@ class LtDomainParser {
         "hk" => array(
             "com" => 1,
         ),
+        "ch" => 1,
     );
 
     protected $hasBeenInitialized = false;
