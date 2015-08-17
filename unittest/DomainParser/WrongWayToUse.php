@@ -1,19 +1,19 @@
 <?php
 /**
- * 本测试文档演示了LtDomainName的错误使用方法
- * 不要按本文档描述的方式使用LtDomainName
+ * 本测试文档演示了LtDomainParser的错误使用方法
+ * 不要按本文档描述的方式使用LtDomainParser
  *
  * 没有正常初始化
- *	没调init()方法（无论是否设置过属性）@see WrongWayToUseDomainName::testNotInvokeInit()
- * 	调用了init()方法 @see RightWayToUseDomainName
+ *	没调init()方法（无论是否设置过属性）@see WrongWayToUseDomainParser::testNotInvokeInit()
+ * 	调用了init()方法 @see RightWayToUseDomainParser
  * 正常初始化了
  *  调用不成功
- *      传递给getRootDomain()的参数类型不合法 @see WrongWayToUseDomainName::testBadDomainDataType
- *      传递给getRootDomain()的参数值不合法 @see WrongWayToUseDomainName::testBadDomainValue
+ *      传递给getRootDomain()的参数类型不合法 @see WrongWayToUseDomainParser::testBadDomainDataType
+ *      传递给getRootDomain()的参数值不合法 @see WrongWayToUseDomainParser::testBadDomainValue
  *
  */
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "common.inc.php";
-class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
+class WrongWayToUseDomainParser extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * 测试getRootDomain()方法不支持的参数数据类型
@@ -25,7 +25,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
 			array(TRUE),
 			array(777),
 			array(3.14),
-			array(new WrongWayToUseDomainName),
+			array(new WrongWayToUseDomainParser),
 		);
 	}
 
@@ -44,6 +44,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
             //不包含ISO标准不允许的ASCII字符
             //  点号个数=0
             array("example"),
+            array("com"),
             //  点号个数>126
 //            array("6.5.4.3.example.com"),
             //  点号个数介于1和126之间
@@ -68,6 +69,10 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
             //              总长不超过255字节
             //                  TOP Level不正确
             array("example.php"),
+            //                  TOP Level正确
+            //                      只有ccSLD
+            array("com.cn")
+
 		);
 	}
 
@@ -76,7 +81,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
 	 */
 	public function testNotInvokeInit()
 	{
-		$dn = new LtDomainName;
+		$dn = new LtDomainParser;
 		$dn->getRootDomain("example.com.cn");
 	}
 
@@ -85,7 +90,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
 	 */
 	public function testBadDomainDataType($para)
 	{
-		$dn = new LtDomainName;
+		$dn = new LtDomainParser;
         $dn->init();
         $this->assertNull($dn->getRootDomain($para));
 	}
@@ -95,7 +100,7 @@ class WrongWayToUseDomainName extends PHPUnit_Framework_TestCase
      */
     public function testBadDomainValue($para)
     {
-        $dn = new LtDomainName;
+        $dn = new LtDomainParser;
         $dn->init();
         $this->assertNull($dn->getRootDomain($para));
     }

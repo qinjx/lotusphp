@@ -3,15 +3,15 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "RightWayToUse.php";
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "WrongWayToUse.php";
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . "PerformanceTuning.php";
 
-class BloomFilterAllTest
+class DomainParserAllTest
 {
     public static function suite()
     {
         $suite = new PHPUnit_Framework_TestSuite('PHPUnit_Framework');
 
-        $suite->addTestSuite('RightWayToUseBloomFilter');
-        $suite->addTestSuite('WrongWayToUseBloomFilter');
-        $suite->addTestSuite('PerformanceTuningBloomFilter');
+        $suite->addTestSuite('RightWayToUseDomainParser');
+        $suite->addTestSuite('WrongWayToUseDomainParser');
+        $suite->addTestSuite('PerformanceTuningDomainParser');
 
         return $suite;
     }

@@ -60,7 +60,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 			if ($ruleValue instanceof LtConfigExpression)
 			{
 				eval('$_ruleValue = ' . $ruleValue->__toString());
-				$dtd->rules[$ruleKey] = $_ruleValue;
+				$dtd->rules[$ruleKey] = $ruleValue;
 			}
 		}
 		$error_messages = $validator->validate($dtd);
@@ -76,7 +76,7 @@ class RightWayToUseValidator extends PHPUnit_Framework_TestCase
 			if ($ruleValue instanceof LtConfigExpression)
 			{
 				eval('$_ruleValue = ' . $ruleValue->__toString());
-				$dtd->rules[$ruleKey] = $_ruleValue;
+				$dtd->rules[$ruleKey] = $ruleValue;
 			}
 		}
 		$error_messages = $validator->validate($dtd);

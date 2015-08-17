@@ -3,12 +3,12 @@
  * cookie
  * @author Jianxiang Qin <TalkativeDoggy@gmail.com>
  * @license http://opensource.org/licenses/BSD-3-Clause New BSD License
- * @version svn:$Id: Cookie.php 964 2012-08-27 04:02:32Z zhao5908@gmail.com $
+ * @version svn:$Id: Cookie.php 964 2015-01-20 11:57:32 iuyes@qq.com $
  */
 
 /**
  * cookie
- * @author Jianxiang Qin <TalkativeDoggy@gmail.com> Yi Zhao <zhao5908@gmail.com>
+ * @author Jianxiang Qin <TalkativeDoggy@gmail.com> Yi Zhao <zhao5908@gmail.com> Alex Lee <iuyes@qq.com>
  * @category runtime
  * @package   Lotusphp\Cookie
  */
@@ -159,21 +159,22 @@ class LtCookie
 	 * @param string $path
 	 * @param string $domain
 	 * @param int $secure
+	 * @param boolean $httpOnly
 	 */
-	public function setCookie($name, $value = '', $expire = null, $path = '/', $domain = null, $secure = 0)
+	public function setCookie($name, $value = '', $expire = null, $path = '/', $domain = null, $secure = 0, $httpOnly = true)
 	{
 		if (is_array($value))
 		{
 			foreach($value as $k => $v)
 			{
 				$v = $this->encrypt($v);
-				setcookie($name . '[' . $k . ']', $v, $expire, $path, $domain, $secure);
+				setcookie($name . '[' . $k . ']', $v, $expire, $path, $domain, $secure, $httpOnly);
 			}
 		}
 		else
 		{
 			$value = $this->encrypt($value);
-			setcookie($name, $value, $expire, $path, $domain, $secure);
+			setcookie($name, $value, $expire, $path, $domain, $secure, $httpOnly);
 		}
 	}
 }

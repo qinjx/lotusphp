@@ -6,7 +6,7 @@
  * Time: 下午3:26
  */
 
-class LtDomainName {
+class LtDomainParser {
     protected $TLD = array(
         "aero" => 1, "asia" => 1, "biz" => 1, "cat" => 1, "com" => 1, "coop" => 1, "edu" => 1, "gov" => 1, "local" => 1,
         "info" => 1, "int" => 1, "jobs" => 1, "mil" => 1, "mobi" => 1, "name" => 1, "net" => 1, "org" => 1, "post" => 1,
@@ -27,6 +27,7 @@ class LtDomainName {
         "hk" => array(
             "com" => 1,
         ),
+        "ch" => 1,
     );
 
     protected $hasBeenInitialized = false;
@@ -44,14 +45,16 @@ class LtDomainName {
         if ($this->hasBeenInitialized) {
             if (is_string($hostname) && $Last3Tokens = $this->getValidLast3DomainLabels($hostname)) {
                 $sld = $Last3Tokens[1] . "." . $Last3Tokens[0];
-                if (2 === count($Last3Tokens)) {
-                    return $sld;
-                } else {
-                    if (3 <= strlen($Last3Tokens[0])) {//gTLD
+                if (3 <= strlen($Last3Tokens[0])) {//gTLD
+                    if (isset($this->TLD[$Last3Tokens[0]])) {
                         return $sld;
-                    } else {//ccTLD
+                    }
+                } else {//ccTLD
+                    if (isset($this->ccTLD[$Last3Tokens[0]])) {//ccTLD
                         if (isset($this->ccTLD[$Last3Tokens[0]][$Last3Tokens[1]])) {//Reserved ccSLD
-                            return $Last3Tokens[2] . "." . $sld;
+                            if (isset($Last3Tokens[2])) {
+                                return $Last3Tokens[2] . "." . $sld;
+                            }
                         } else {
                             return $sld;
                         }
@@ -74,39 +77,20 @@ class LtDomainName {
             $labels = explode(".", $hostname);
             $labelsNum = count($labels);
             if (2 <= $labelsNum && 127 >= $labelsNum) {
-                if ($this->isValidTLD($labels)) {
-                    $Last3Tokens = array();
-                    for ($i = $labelsNum-1; $i >= 0; $i --) {
-                        if (true === $this->isValidDomainLabel($labels[$i])) {
-                            if ($i >= $labelsNum - 3) {
-                                $Last3Tokens[$labelsNum - $i - 1] = $labels[$i];
-                            }
-                        } else {
-                            return null;
+                $Last3Tokens = array();
+                for ($i = $labelsNum-1; $i >= 0; $i --) {
+                    if (true === $this->isValidDomainLabel($labels[$i])) {
+                        if ($i >= $labelsNum - 3) {
+                            $Last3Tokens[$labelsNum - $i - 1] = $labels[$i];
                         }
+                    } else {
+                        return null;
                     }
-                    return $Last3Tokens;
-                } else {
-                    return null;
                 }
+                return $Last3Tokens;
             }
         }
         return null;
-    }
-
-    /**
-     * 判断最后一段是不是合法的TLD或者ccTLD
-     * @param $labels
-     * @return bool
-     */
-    protected function isValidTLD($labels) {
-        $tld = $labels[count($labels) - 1];
-        $tldLen = strlen($tld);
-        if (2 == $tldLen) {//ccTLD
-            return isset($this->ccTLD[$tld]);
-        } else {//gTLD and invalid TLD
-            return isset($this->TLD[$tld]);
-        }
     }
 
     /**

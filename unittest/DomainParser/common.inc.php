@@ -1,12 +1,12 @@
 <?php
 $lotusHome = substr(__FILE__, 0, strpos(__FILE__, "unittest"));
 require_once $lotusHome . "unittest/unittest_util.func.php";
-require_once $lotusHome . "runtime/DomainName/DomainName.php";
+require_once $lotusHome . "runtime/DomainParser/DomainParser.php";
 
 /**
- * 用这个类把LtDomainName的protected属性和方法暴露出来测试
+ * 用这个类把LtDomainParser的protected属性和方法暴露出来测试
  */
-class LtDomainNameProxy extends LtDomainName
+class LtDomainParserProxy extends LtDomainParser
 {
     public $TLD = array(
         "aero" => 1, "asia" => 1, "biz" => 1, "cat" => 1, "com" => 1, "coop" => 1, "edu" => 1, "gov" => 1, "local" => 1,
