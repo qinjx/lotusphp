@@ -1,0 +1,9 @@
+*~
+.DS_Store
+.settings/
+.idea
+.project
+composer.lock
+composer.phar
+.vagrant
+Vagrantfile
